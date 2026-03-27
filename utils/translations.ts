@@ -49,7 +49,7 @@ export const translations = {
       stats_languages: 'Spoken Languages',
       stats_year: 'Year of Study',
 
-      stats_projects_value: '2+',
+      stats_projects_value: '6+',
       stats_technologies_value: '15+',
       stats_languages_value: '3',
       stats_year_value: '3rd',
@@ -237,7 +237,7 @@ export const translations = {
       stats_languages: 'Langues parlées',
       stats_year: 'Année d\'étude',
 
-      stats_projects_value: '2+',
+      stats_projects_value: '6+',
       stats_technologies_value: '15+',
       stats_languages_value: '3',
       stats_year_value: '3ème',

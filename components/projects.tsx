@@ -319,14 +319,14 @@ function SlidesViewer({ sources, title }: { sources: string[]; title: string }) 
           <button onClick={prev}
             className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
               flex items-center justify-center text-white
-              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+              opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-30"
             style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronLeft size={14} />
           </button>
           <button onClick={next}
             className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
               flex items-center justify-center text-white
-              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+              opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-30"
             style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronRight size={14} />
           </button>
@@ -551,8 +551,8 @@ function ProjectCard({
 
         {/* Description */}
         <p
-          className="flex-1 leading-relaxed"
-          style={{ fontSize: '12.5px', color: 'var(--color-muted, #6b7280)', lineHeight: 1.6 }}
+          className="flex-1 leading-relaxed text-gray-600 transition-colors duration-150 dark:text-gray-400"
+          style={{ fontSize: '12.5px', lineHeight: 1.6 }}
         >
           {description}
         </p>
