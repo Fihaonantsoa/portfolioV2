@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { ExternalLink, Github, ChevronLeft, ChevronRight, ArrowUpRight, Smartphone, Monitor } from 'lucide-react'
+import { ExternalLink, Github, ChevronLeft, ChevronRight, Smartphone, Monitor } from 'lucide-react'
 import { useLanguage } from '@/utils/language-context'
 import SectionTitle from '@/components/SectionTitle'
 import Image from 'next/image'
@@ -36,17 +36,13 @@ const projects: Project[] = [
     title: 'Gestion de paiement eau & électricité',
     title_en: 'Water & Electricity Payment Management',
     description:
-      'Application web de gestion et de suivi des paiements d\'eau et d\'électricité. Développée en PHP / Laravel avec une interface moderne TailwindCSS.',
+      "Application web de gestion et de suivi des paiements d'eau et d'électricité. Développée en PHP / Laravel avec une interface moderne TailwindCSS.",
     description_en:
       'Web application for managing and tracking water and electricity payments. Built with PHP / Laravel and a modern TailwindCSS interface.',
     tags: ['PHP', 'Laravel', 'TailwindCSS', 'MySQL'],
     media: {
       type: 'slides',
-      sources: [
-        '/images/java.png',
-        '/images/php.png',
-        '/images/vuejs.png',
-      ],
+      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Projet académique',
@@ -54,20 +50,16 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: 'Gestion des notes d\'examen',
+    title: "Gestion des notes d'examen",
     title_en: 'Exam Grade Management',
     description:
-      'Application desktop de gestion et de suivi des notes d\'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.',
+      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
     description_en:
       'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
     tags: ['Java', 'MySQL', 'JavaFX'],
     media: {
       type: 'slides',
-      sources: [
-        '/images/java.png',
-        '/images/php.png',
-        '/images/vuejs.png',
-      ],
+      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Projet académique',
@@ -84,11 +76,7 @@ const projects: Project[] = [
     tags: ['React Native', 'Expo', 'Firebase', 'TypeScript'],
     media: {
       type: 'mobile',
-      sources: [
-        '/images/java.png',
-        '/images/php.png',
-        '/images/vuejs.png',
-      ],
+      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Application mobile',
@@ -96,20 +84,16 @@ const projects: Project[] = [
   },
   {
     id: 4,
-    title: 'Gestion des notes d\'examen',
+    title: "Gestion des notes d'examen",
     title_en: 'Exam Grade Management',
     description:
-      'Application desktop de gestion et de suivi des notes d\'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.',
+      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
     description_en:
       'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
     tags: ['Java', 'MySQL', 'JavaFX'],
     media: {
       type: 'slides',
-      sources: [
-        '/images/java.png',
-        '/images/php.png',
-        '/images/vuejs.png',
-      ],
+      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Projet académique',
@@ -126,11 +110,7 @@ const projects: Project[] = [
     tags: ['Flutter', 'Dart', 'Stripe', 'Node.js'],
     media: {
       type: 'mobile',
-      sources: [
-        '/images/java.png',
-        '/images/php.png',
-        '/images/vuejs.png',
-      ],
+      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     live: 'https://example.com',
@@ -139,26 +119,152 @@ const projects: Project[] = [
   },
   {
     id: 6,
-    title: 'Gestion des notes d\'examen',
+    title: "Gestion des notes d'examen",
     title_en: 'Exam Grade Management',
     description:
-      'Application desktop de gestion et de suivi des notes d\'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.',
+      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
     description_en:
       'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
     tags: ['Java', 'MySQL', 'JavaFX'],
     media: {
       type: 'slides',
-      sources: [
-        '/images/java.png',
-        '/images/php.png',
-        '/images/vuejs.png',
-      ],
+      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Projet académique',
     status_en: 'Academic project',
   },
 ]
+
+// ─── Browser Mockup (fallback web/desktop) ────────────────────────────────────
+function BrowserMockupFallback({ initial }: { initial: string }) {
+  return (
+    <div className="absolute inset-0 flex flex-col" style={{
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%)',
+    }}>
+      {/* Chrome bar */}
+      <div className="flex items-center gap-1.5 px-3 py-2 border-b border-white/8"
+        style={{ background: 'rgba(255,255,255,0.04)' }}>
+        <span className="w-2 h-2 rounded-full" style={{ background: '#ff5f57' }} />
+        <span className="w-2 h-2 rounded-full" style={{ background: '#febc2e' }} />
+        <span className="w-2 h-2 rounded-full" style={{ background: '#28c840' }} />
+        <div className="flex-1 h-3.5 rounded mx-2" style={{ background: 'rgba(255,255,255,0.08)' }} />
+      </div>
+      {/* Fake screen content */}
+      <div className="flex-1 p-3 flex flex-col gap-2">
+        <div className="h-2 rounded" style={{ width: '65%', background: 'rgba(255,255,255,0.07)' }} />
+        <div className="flex gap-2 flex-1">
+          <div className="flex-1 rounded" style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.06)' }}>
+            <div className="p-2 flex flex-col gap-1.5">
+              <div className="h-1.5 rounded" style={{ width: '80%', background: 'rgba(255,255,255,0.08)' }} />
+              <div className="h-1.5 rounded" style={{ width: '55%', background: 'rgba(255,255,255,0.05)' }} />
+              <div className="h-1.5 rounded" style={{ width: '70%', background: 'rgba(255,255,255,0.05)' }} />
+            </div>
+          </div>
+        </div>
+        <div className="h-2 rounded" style={{ width: '45%', background: 'rgba(255,255,255,0.05)' }} />
+      </div>
+      {/* Centered initial as subtle watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <span style={{ fontSize: '72px', fontWeight: 900, color: 'rgba(255,255,255,0.03)', userSelect: 'none' }}>
+          {initial}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+// ─── Phone Screen (BUG FIX: gradient UNDER image) ─────────────────────────────
+function PhoneScreen({ src, title, index }: { src: string; title: string; index: number }) {
+  return (
+    <div className="relative w-full h-full">
+      {/* 1. Gradient fallback — EN DESSOUS (z-0) */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: `linear-gradient(160deg,
+            oklch(0.35 0.18 ${260 + index * 35}) 0%,
+            oklch(0.22 0.10 ${290 + index * 20}) 100%)`,
+        }}
+      />
+      {/* Fake UI lines on fallback */}
+      <div className="absolute inset-0 z-[1] p-2 flex flex-col gap-1.5 pointer-events-none">
+        <div className="h-1.5 rounded-sm" style={{ width: '80%', background: 'rgba(255,255,255,0.15)' }} />
+        <div className="h-1.5 rounded-sm" style={{ width: '60%', background: 'rgba(255,255,255,0.10)' }} />
+        <div className="h-1.5 rounded-sm" style={{ width: '45%', background: 'rgba(255,255,255,0.08)' }} />
+      </div>
+      {/* 2. Initial fallback letter — z-[1] */}
+      <span className="absolute inset-0 flex items-center justify-center z-[1] select-none pointer-events-none"
+        style={{ fontSize: '24px', fontWeight: 900, color: 'rgba(255,255,255,0.12)' }}>
+        {title.charAt(0)}
+      </span>
+      {/* 3. Image — PAR-DESSUS (z-[2]) ← FIX DU BUG */}
+      <Image
+        src={src}
+        alt={`${title} - screen ${index + 1}`}
+        fill
+        className="object-cover z-[2]"
+        onError={(e) => {
+          ;(e.target as HTMLImageElement).style.display = 'none'
+        }}
+      />
+    </div>
+  )
+}
+
+// ─── Phone Shell ──────────────────────────────────────────────────────────────
+function PhoneShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="relative flex flex-col"
+      style={{
+        width: '64px',
+        height: '128px',
+        borderRadius: '16px',
+        background: 'linear-gradient(160deg, #2a2a3a, #1a1a28)',
+        border: '1.5px solid rgba(255,255,255,0.15)',
+        padding: '8px 4px 6px',
+        boxShadow:
+          '0 16px 48px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3)',
+      }}
+    >
+      {/* Notch */}
+      <div
+        className="absolute"
+        style={{
+          top: '4px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '16px',
+          height: '3px',
+          borderRadius: '2px',
+          background: 'rgba(255,255,255,0.12)',
+          zIndex: 5,
+        }}
+      />
+      {/* Screen area */}
+      <div
+        className="relative w-full h-full overflow-hidden"
+        style={{ borderRadius: '9px', background: '#080812' }}
+      >
+        {children}
+      </div>
+      {/* Home bar */}
+      <div
+        className="absolute"
+        style={{
+          bottom: '3px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '20px',
+          height: '2px',
+          borderRadius: '1px',
+          background: 'rgba(255,255,255,0.18)',
+        }}
+      />
+    </div>
+  )
+}
 
 // ─── Slides Viewer (web/desktop) ──────────────────────────────────────────────
 function SlidesViewer({ sources, title }: { sources: string[]; title: string }) {
@@ -169,81 +275,83 @@ function SlidesViewer({ sources, title }: { sources: string[]; title: string }) 
   const next = () => setCurrentSlide((i) => (i + 1) % sources.length)
 
   return (
-    <div className="relative w-full h-52 rounded-t-xl overflow-hidden bg-foreground/5 group">
+    <div className="relative w-full h-52 rounded-t-xl overflow-hidden group">
+      {/* Background */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
+          exit={{ opacity: 0, x: -16 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
           className="absolute inset-0"
         >
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{
-              background: `linear-gradient(135deg,
-                oklch(0.55 0.22 142 / 0.15) 0%,
-                oklch(0.72 0.18 155 / 0.08) 50%,
-                oklch(0.82 0.13 185 / 0.12) 100%)`,
+          {/* Fallback browser mockup */}
+          <BrowserMockupFallback initial={title.charAt(0)} />
+          {/* Real image on top */}
+          <Image
+            src={sources[currentSlide]}
+            alt={`${title} - slide ${currentSlide + 1}`}
+            fill
+            className="object-cover z-10"
+            onError={(e) => {
+              ;(e.target as HTMLImageElement).style.display = 'none'
             }}
-          >
-            <Image
-              src={sources[currentSlide]}
-              alt={`${title} - slide ${currentSlide + 1}`}
-              fill
-              className="object-cover"
-              onError={(e) => {
-                ;(e.target as HTMLImageElement).style.display = 'none'
-              }}
-            />
-            <span className="text-accent/20 text-6xl font-black select-none pointer-events-none z-0">
-              {title.charAt(0)}
-            </span>
-          </div>
+          />
         </motion.div>
       </AnimatePresence>
 
-      {/* Desktop badge */}
-      <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/35 backdrop-blur-sm text-white/70 text-[10px] z-10">
-        <Monitor size={10} />
-        <span>Web / Desktop</span>
+      {/* Platform badge */}
+      <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-1 rounded-full z-20"
+        style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)' }}>
+        <Monitor size={9} className="text-white/60" />
+        <span style={{ fontSize: '10px', fontWeight: 500, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.3px' }}>
+          Web / Desktop
+        </span>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+      {/* Bottom gradient */}
+      <div className="absolute inset-x-0 bottom-0 h-16 z-20 pointer-events-none"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.25), transparent)' }} />
 
       {isMulti && (
         <>
-          <button
-            onClick={prev}
+          <button onClick={prev}
             className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
-              bg-black/40 backdrop-blur-sm text-white flex items-center justify-center
-              opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 z-10"
-          >
+              flex items-center justify-center text-white
+              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+            style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronLeft size={14} />
           </button>
-          <button
-            onClick={next}
+          <button onClick={next}
             className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
-              bg-black/40 backdrop-blur-sm text-white flex items-center justify-center
-              opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 z-10"
-          >
+              flex items-center justify-center text-white
+              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+            style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronRight size={14} />
           </button>
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          {/* Dots */}
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-30">
             {sources.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentSlide(i)}
-                className={`rounded-full transition-all duration-300 ${
-                  i === currentSlide
-                    ? 'w-4 h-1.5 bg-accent'
-                    : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
-                }`}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: i === currentSlide ? '16px' : '6px',
+                  height: '6px',
+                  background: i === currentSlide ? 'rgb(var(--accent))' : 'rgba(255,255,255,0.4)',
+                }}
               />
             ))}
           </div>
-          <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm text-white text-[10px] z-10">
+          <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full z-30"
+            style={{
+              background: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(4px)',
+              fontSize: '10px',
+              color: 'rgba(255,255,255,0.6)',
+            }}>
             {currentSlide + 1} / {sources.length}
           </div>
         </>
@@ -264,31 +372,31 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
     <div
       className="relative w-full h-52 rounded-t-xl overflow-hidden group flex items-center justify-center"
       style={{
-        background: `linear-gradient(145deg,
-          oklch(0.18 0.04 260) 0%,
-          oklch(0.22 0.06 280) 50%,
-          oklch(0.16 0.05 250) 100%)`,
+        background: 'linear-gradient(145deg, #0d0d1a 0%, #150f30 50%, #0a0a1f 100%)',
       }}
     >
-      {/* Fond décoratif avec cercles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-accent/5" />
-        <div className="absolute -bottom-4 -left-4 w-24 h-24 rounded-full bg-accent/8" />
+      {/* Decorative orbs */}
+      <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)' }} />
+      <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%)' }} />
+
+      {/* Platform badge */}
+      <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-1 rounded-full z-20"
+        style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)' }}>
+        <Smartphone size={9} className="text-white/60" />
+        <span style={{ fontSize: '10px', fontWeight: 500, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.3px' }}>
+          Mobile
+        </span>
       </div>
 
-      {/* Badge mobile */}
-      <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/35 backdrop-blur-sm text-white/70 text-[10px] z-10">
-        <Smartphone size={10} />
-        <span>Mobile</span>
-      </div>
-
-      {/* Mockup téléphone */}
-      <div className="relative z-10 flex items-center justify-center h-full py-3">
-        {/* Téléphones empilés si plusieurs slides */}
+      {/* Phones */}
+      <div className="relative flex items-center justify-center h-full py-3">
+        {/* Back phone (depth effect) */}
         {isMulti && currentSlide < sources.length - 1 && (
           <div
             className="absolute"
-            style={{ transform: 'translateX(22px) translateY(6px) scale(0.88)', zIndex: 1 }}
+            style={{ transform: 'translateX(20px) translateY(6px) scale(0.88)', zIndex: 1 }}
           >
             <PhoneShell>
               <PhoneScreen src={sources[currentSlide + 1]} title={title} index={currentSlide + 1} />
@@ -296,12 +404,12 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
           </div>
         )}
 
-        {/* Téléphone principal */}
+        {/* Main phone */}
         <motion.div
           key={currentSlide}
-          initial={{ opacity: 0, scale: 0.92, y: 6 }}
+          initial={{ opacity: 0, scale: 0.93, y: 5 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
+          transition={{ duration: 0.28, ease: 'easeOut' }}
           style={{ position: 'relative', zIndex: 2 }}
         >
           <PhoneShell>
@@ -313,118 +421,45 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
       {/* Navigation */}
       {isMulti && (
         <>
-          <button
-            onClick={prev}
+          <button onClick={prev}
             className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
-              bg-black/40 backdrop-blur-sm text-white flex items-center justify-center
-              opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 z-20"
-          >
+              flex items-center justify-center text-white
+              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+            style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronLeft size={14} />
           </button>
-          <button
-            onClick={next}
+          <button onClick={next}
             className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
-              bg-black/40 backdrop-blur-sm text-white flex items-center justify-center
-              opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 z-20"
-          >
+              flex items-center justify-center text-white
+              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+            style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronRight size={14} />
           </button>
-
-          {/* Dots */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-30">
             {sources.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentSlide(i)}
-                className={`rounded-full transition-all duration-300 ${
-                  i === currentSlide
-                    ? 'w-4 h-1.5 bg-accent'
-                    : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
-                }`}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: i === currentSlide ? '16px' : '6px',
+                  height: '6px',
+                  background: i === currentSlide ? '#a78bfa' : 'rgba(255,255,255,0.3)',
+                }}
               />
             ))}
           </div>
-
-          <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm text-white text-[10px] z-10">
+          <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full z-30"
+            style={{
+              background: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(4px)',
+              fontSize: '10px',
+              color: 'rgba(255,255,255,0.6)',
+            }}>
             {currentSlide + 1} / {sources.length}
           </div>
         </>
       )}
-    </div>
-  )
-}
-
-// ─── Composants utilitaires Mobile ────────────────────────────────────────────
-function PhoneShell({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className="relative flex flex-col items-center justify-center"
-      style={{
-        width: '72px',
-        height: '140px',
-        borderRadius: '16px',
-        background: 'linear-gradient(145deg, oklch(0.32 0.04 260), oklch(0.22 0.03 250))',
-        border: '2px solid oklch(0.42 0.06 260)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 oklch(0.5 0.05 260 / 0.4)',
-        padding: '6px 4px',
-      }}
-    >
-      {/* Encoche */}
-      <div
-        className="absolute top-1.5 left-1/2 -translate-x-1/2"
-        style={{
-          width: '20px',
-          height: '4px',
-          borderRadius: '2px',
-          background: 'oklch(0.18 0.03 260)',
-          zIndex: 5,
-        }}
-      />
-      {/* Écran */}
-      <div
-        className="relative w-full h-full rounded-xl overflow-hidden"
-        style={{ background: '#0a0a0f', marginTop: '2px' }}
-      >
-        {children}
-      </div>
-      {/* Bouton home */}
-      <div
-        className="absolute -bottom-1"
-        style={{
-          width: '18px',
-          height: '3px',
-          borderRadius: '2px',
-          background: 'oklch(0.38 0.05 260)',
-        }}
-      />
-    </div>
-  )
-}
-
-function PhoneScreen({ src, title, index }: { src: string; title: string; index: number }) {
-  return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      <Image
-        src={src}
-        alt={`${title} - screen ${index + 1}`}
-        fill
-        className="object-cover"
-        onError={(e) => {
-          ;(e.target as HTMLImageElement).style.display = 'none'
-        }}
-      />
-      {/* Fallback gradient */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(160deg,
-            oklch(0.35 0.12 ${260 + index * 30}) 0%,
-            oklch(0.25 0.08 ${280 + index * 20}) 100%)`,
-        }}
-      />
-      <span className="relative z-10 text-white/20 text-2xl font-black select-none">
-        {title.charAt(0)}
-      </span>
     </div>
   )
 }
@@ -437,9 +472,17 @@ function MediaViewer({ media, title }: { media: ProjectMedia; title: string }) {
   return <SlidesViewer sources={media.sources} title={title} />
 }
 
-// ─── Carte projet ─────────────────────────────────────────────────────────────
-function ProjectCard({ project, lang, inView, delay }: {
-  project: Project; lang: string; inView: boolean; delay: number
+// ─── Project Card ─────────────────────────────────────────────────────────────
+function ProjectCard({
+  project,
+  lang,
+  inView,
+  delay,
+}: {
+  project: Project
+  lang: string
+  inView: boolean
+  delay: number
 }) {
   const title = lang === 'fr' ? project.title : project.title_en
   const description = lang === 'fr' ? project.description : project.description_en
@@ -448,42 +491,69 @@ function ProjectCard({ project, lang, inView, delay }: {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay }}
-      className="group flex flex-col rounded-xl overflow-hidden
-        bg-white/65 dark:bg-card
-        border border-accent/20
-        shadow-md hover:shadow-xl hover:shadow-accent/10
-        hover:border-accent/50
-        backdrop-blur-sm
-        transition-all duration-300"
-      style={{ transform: 'translateZ(0)' }}
+      transition={{ duration: 0.5, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-300"
+      style={{
+        background: 'var(--color-card, white)',
+        border: '0.5px solid rgba(0,0,0,0.08)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
+        transform: 'translateZ(0)',
+      }}
+      whileHover={{
+        y: -3,
+        boxShadow: isMobile
+          ? '0 8px 32px rgba(139,92,246,0.12), 0 2px 8px rgba(0,0,0,0.08)'
+          : '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)',
+        borderColor: isMobile ? 'rgba(139,92,246,0.25)' : 'rgba(0,0,0,0.14)',
+      }}
     >
-      {/* ── Media ── */}
+      {/* ── Media zone ── */}
       <MediaViewer media={project.media} title={title} />
 
-      {/* ── Contenu ── */}
-      <div className="flex flex-col flex-1 p-5 gap-4">
+      {/* ── Card body ── */}
+      <div className="flex flex-col flex-1 p-5 gap-3.5">
 
-        {/* Badge statut + titre */}
+        {/* Status badge + title */}
         <div className="flex flex-col gap-1.5">
-          <span className={`inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest ${
-            isMobile ? 'text-violet-400' : 'text-accent'
-          }`}>
-            <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-              isMobile ? 'bg-violet-400' : 'bg-accent'
-            }`} />
-            {isMobile && <Smartphone size={10} />}
-            {status}
-          </span>
-          <h3 className="text-base font-bold text-foreground/90 leading-snug group-hover:text-accent transition-colors duration-200">
+          <div className="flex items-center gap-2">
+            {/* Glowing dot */}
+            <span
+              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+              style={{
+                background: isMobile ? '#a78bfa' : '#34d399',
+                boxShadow: isMobile
+                  ? '0 0 0 2px rgba(167,139,250,0.2), 0 0 8px rgba(167,139,250,0.4)'
+                  : '0 0 0 2px rgba(52,211,153,0.2), 0 0 8px rgba(52,211,153,0.4)',
+              }}
+            />
+            <span
+              className="uppercase tracking-widest"
+              style={{
+                fontSize: '10px',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                color: isMobile ? '#7c3aed' : '#059669',
+              }}
+            >
+              {status}
+            </span>
+          </div>
+
+          <h3
+            className="font-medium leading-snug transition-colors duration-200"
+            style={{ fontSize: '14px', color: 'var(--color-foreground, #111)' }}
+          >
             {title}
           </h3>
         </div>
 
         {/* Description */}
-        <p className="text-sm text-foreground/55 leading-relaxed flex-1">
+        <p
+          className="flex-1 leading-relaxed"
+          style={{ fontSize: '12.5px', color: 'var(--color-muted, #6b7280)', lineHeight: 1.6 }}
+        >
           {description}
         </p>
 
@@ -492,29 +562,39 @@ function ProjectCard({ project, lang, inView, delay }: {
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${
-                isMobile
-                  ? 'bg-violet-500/8 dark:bg-violet-500/10 text-violet-400/80 border-violet-500/15'
-                  : 'bg-accent/8 dark:bg-accent/10 text-accent/80 border-accent/15'
-              }`}
+              className="px-2.5 py-0.5 rounded-full font-medium"
+              style={{
+                fontSize: '10.5px',
+                background: isMobile
+                  ? 'rgba(124,58,237,0.07)'
+                  : 'rgba(5,150,105,0.07)',
+                color: isMobile ? '#6d28d9' : '#047857',
+                border: `0.5px solid ${isMobile ? 'rgba(124,58,237,0.15)' : 'rgba(5,150,105,0.15)'}`,
+              }}
             >
               {tag}
             </span>
           ))}
         </div>
 
-        {/* Liens */}
-        <div className="flex items-center gap-3 pt-3 border-t border-border/40">
+        {/* Footer links */}
+        <div
+          className="flex items-center gap-3 pt-3"
+          style={{ borderTop: '0.5px solid rgba(0,0,0,0.07)' }}
+        >
           {project.github && (
             <motion.a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-1.5 text-xs text-foreground/50 hover:text-accent transition-colors"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              className="flex items-center gap-1.5 transition-colors duration-150"
+              style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#374151')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
             >
-              <Github size={14} />
+              <Github size={13} />
               <span>Code</span>
             </motion.a>
           )}
@@ -523,22 +603,36 @@ function ProjectCard({ project, lang, inView, delay }: {
               href={project.live}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-1.5 text-xs text-foreground/50 hover:text-accent transition-colors"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              className="flex items-center gap-1.5 transition-colors duration-150"
+              style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#374151')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
             >
-              <ExternalLink size={14} />
+              <ExternalLink size={13} />
               <span>Live</span>
             </motion.a>
           )}
+
+          {/* Arrow button */}
           <motion.div
-            className="ml-auto w-7 h-7 rounded-full border border-border/50
-              flex items-center justify-center
-              text-foreground/30 group-hover:text-accent group-hover:border-accent/50
-              transition-all duration-300"
-            whileHover={{ rotate: 45 }}
+            className="ml-auto flex items-center justify-center rounded-full transition-all duration-200"
+            style={{
+              width: '28px',
+              height: '28px',
+              border: '0.5px solid rgba(0,0,0,0.10)',
+              color: '#d1d5db',
+              fontSize: '14px',
+              cursor: 'pointer',
+            }}
+            whileHover={{
+              rotate: 45,
+              borderColor: isMobile ? 'rgba(124,58,237,0.4)' : 'rgba(5,150,105,0.4)',
+              color: isMobile ? '#7c3aed' : '#059669',
+            }}
           >
-            <ArrowUpRight size={13} />
+            ↗
           </motion.div>
         </div>
       </div>
@@ -562,14 +656,14 @@ export default function Projects() {
     <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <SectionTitle title={t('projects.title')} align="left" />
 
-      <div ref={ref} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div ref={ref} className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         {projects.map((project, i) => (
           <ProjectCard
             key={project.id}
             project={project}
             lang={lang}
             inView={inView}
-            delay={i * 0.12}
+            delay={i * 0.1}
           />
         ))}
       </div>
