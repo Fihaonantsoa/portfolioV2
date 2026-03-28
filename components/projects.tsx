@@ -32,107 +32,95 @@ interface Project {
 // ─── Données projets ──────────────────────────────────────────────────────────
 const projects: Project[] = [
   {
-    id: 6,
-    title: "Gestion des fichiers d'enquête",
-    title_en: 'Servey files management',
-    description:
-      "Application web de gestion des fichier d'enquêtes, adapter au hierarchie administrative de madagascar (national, regional, communal, ...)",
-    description_en:
-      "Application web de gestion des fichier d'enquêtes, adapter au hierarchie administrative de madagascar (national, regional, communal, ...)",
-    tags: ['Larevel', 'React', 'MySQL'],
-    media: {
-      type: 'slides',
-      sources: ['/images/enquete.png', '/images/enquete1.png'],
-    },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Projet académique',
-    status_en: 'Academic project',
+      id: 6,
+      title: "Gestion des fichiers d'enquête",
+      title_en: "Survey files management",
+      description: "Application web de gestion des fichiers d'enquête, adaptée à la hiérarchie administrative de Madagascar (national, régional, communal, ...)",
+      description_en: "Web application for managing survey files, designed to align with Madagascar's administrative hierarchy (national, regional, communal levels)",
+      tags: ["Laravel", "React", "MySQL"],
+      media: {
+          type: "slides",
+          sources: ["/images/enquete.png", "/images/enquete1.png"]
+      },
+      github: "https://github.com/FIhaonantsoa",
+      status_fr: "Projet de stage",
+      status_en: "Internship project"
   },
   {
     id: 3,
-    title: 'App Mobile de suivie de vente & stock',
-    title_en: 'sales & stock Tracker Mobile App',
-    description:
-      'Application mobile React Native pour le suivi des ventes et des stocks',
-    description_en:
-      'Application mobile React Native pour le suivi des ventes et des stocks',
-    tags: ['React Native', 'Expo', 'TypeScript'],
+    title: "App Mobile de suivi de vente & stock",
+    title_en: "Sales & Stock Tracker Mobile App",
+    description: "Application mobile React Native pour le suivi des ventes et de la gestion des stocks",
+    description_en: "React Native mobile application for sales tracking and inventory management",
+    tags: ["React Native", "Expo", "TypeScript"],
     media: {
-      type: 'mobile',
-      sources: ['/images/native_bio1.png', '/images/native_bio2.png', '/images/native_bio3.png'],
+        type: "mobile",
+        sources: ["/images/native_bio1.png", "/images/native_bio2.png", "/images/native_bio3.png"]
     },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Application mobile',
-    status_en: 'Mobile application',
+    github: "https://github.com/FIhaonantsoa",
+    status_fr: "Application mobile",
+    status_en: "Mobile application"
   },
   {
-    id: 7,
-    title: "Suivie de l'etat du systeme",
-    title_en: 'Systeme Health Tracker',
-    description:
-      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
-    description_en:
-      'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
-    tags: ['React', 'NodeJs', 'Recharts'],
-    media: {
-      type: 'slides',
-      sources: ['/images/sysctl2.png'],
-    },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Projet académique',
-    status_en: 'Academic project',
+      id: 7,
+      title: "Suivi de l'état du système",
+      title_en: "System Health Tracker",
+      description: "Application de surveillance et de suivi de l'état du système, avec visualisation des métriques en temps réel",
+      description_en: "Desktop application for system health monitoring and tracking, featuring real-time metrics visualization",
+      tags: ["React", "NodeJs", "Recharts"],
+      media: {
+          type: "slides",
+          sources: ["/images/sysctl2.png"]
+      },
+      github: "https://github.com/FIhaonantsoa",
+      status_fr: "Projet académique",
+      status_en: "Academic project"
   },
   {
     id: 1,
-    title: 'Gestion de paiement eau & électricité',
-    title_en: 'Water & Electricity Payment Management',
-    description:
-      "Application web de gestion et de suivi des paiements d'eau et d'électricité. Développée en PHP avec une interface moderne TailwindCSS.",
-    description_en:
-      'Web application for managing and tracking water and electricity payments. Built with PHP and a modern TailwindCSS interface.',
-    tags: ['PHP', 'Laravel', 'TailwindCSS', 'PostgreSQL'],
+    title: "Gestion de paiement eau & électricité",
+    title_en: "Water & Electricity Payment Management",
+    description: "Application web de gestion et de suivi des paiements d'eau et d'électricité. Développée en PHP avec une interface moderne Bootstrap.",
+    description_en: "Web application for managing and tracking water and electricity payments. Built with PHP and a modern Bootstrap interface.",
+    tags: ["PHP", "Laravel", "Bootstrap", "PostgreSQL"],
     media: {
-      type: 'slides',
-      sources: ['/images/php2.png', '/images/php.png'],
+        type: "slides",
+        sources: ["/images/php2.png", "/images/php.png"]
     },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Projet académique',
-    status_en: 'Academic project',
+    github: "https://github.com/FIhaonantsoa",
+    status_fr: "Projet académique",
+    status_en: "Academic project"
   },
   {
     id: 2,
-    title: "Gestion des notes d'examen",
-    title_en: 'Exam Grade Management',
-    description:
-      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
-    description_en:
-      'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
-    tags: ['Java Swing', 'MySQL'],
+    title: "Gestion d'emploi du temps",
+    title_en: "Schedule Management",
+    description: "Application desktop de gestion d'emploi du temps avec Java Swing et PostgreSQL. Interface intuitive pour la planification et le suivi des cours.",
+    description_en: "Desktop application for schedule management with Java Swing and PostgreSQL. Intuitive interface for course planning and tracking.",
+    tags: ["Java Swing", "MySQL"],
     media: {
-      type: 'slides',
-      sources: ['/images/java2.webp', '/images/java.png', '/images/java3.webp'],
+        type: "slides",
+        sources: ["/images/java2.webp", "/images/java.png", "/images/java3.webp"]
     },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Projet académique',
-    status_en: 'Academic project',
+    github: "https://github.com/FIhaonantsoa",
+    status_fr: "Projet académique",
+    status_en: "Academic project"
   },
   {
     id: 4,
-    title: "Gestion des notes d'examen",
-    title_en: 'Exam Grade Management',
-    description:
-      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
-    description_en:
-      'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
-    tags: ['VueJs', 'TailwindCSS', 'PHP', 'MySQL'],
+    title: "Location automobile",
+    title_en: "Car Rental Management",
+    description: "Application web de location automobile avec VueJs et MySQL. Interface moderne pour la gestion des véhicules, des réservations et des clients.",
+    description_en: "Web application for car rental management with VueJs and MySQL. Modern interface for managing vehicles, reservations and customers.",
+    tags: ["VueJs", "TailwindCSS", "PHP", "MySQL"],
     media: {
-      type: 'slides',
-      sources: ['/images/vue2.jpg', '/images/vuejs.png'],
+        type: "slides",
+        sources: ["/images/vue2.jpg", "/images/vuejs.png"]
     },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Projet académique',
-    status_en: 'Academic project',
-  },
+    github: "https://github.com/FIhaonantsoa",
+    status_fr: "Projet académique",
+    status_en: "Academic project"
+}
 ]
 
 // ─── Browser Mockup (fallback web/desktop) ────────────────────────────────────
