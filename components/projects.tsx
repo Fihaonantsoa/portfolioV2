@@ -32,17 +32,68 @@ interface Project {
 // ─── Données projets ──────────────────────────────────────────────────────────
 const projects: Project[] = [
   {
+    id: 6,
+    title: "Gestion des fichiers d'enquête",
+    title_en: 'Servey files management',
+    description:
+      "Application web de gestion des fichier d'enquêtes, adapter au hierarchie administrative de madagascar (national, regional, communal, ...)",
+    description_en:
+      "Application web de gestion des fichier d'enquêtes, adapter au hierarchie administrative de madagascar (national, regional, communal, ...)",
+    tags: ['Larevel', 'React', 'MySQL'],
+    media: {
+      type: 'slides',
+      sources: ['/images/enquete.png', '/images/enquete1.png'],
+    },
+    github: 'https://github.com/FIhaonantsoa',
+    status_fr: 'Projet académique',
+    status_en: 'Academic project',
+  },
+  {
+    id: 3,
+    title: 'App Mobile de suivie de vente & stock',
+    title_en: 'sales & stock Tracker Mobile App',
+    description:
+      'Application mobile React Native pour le suivi des ventes et des stocks',
+    description_en:
+      'Application mobile React Native pour le suivi des ventes et des stocks',
+    tags: ['React Native', 'Expo', 'TypeScript'],
+    media: {
+      type: 'mobile',
+      sources: ['/images/native_bio1.png', '/images/native_bio2.png', '/images/native_bio3.png'],
+    },
+    github: 'https://github.com/FIhaonantsoa',
+    status_fr: 'Application mobile',
+    status_en: 'Mobile application',
+  },
+  {
+    id: 7,
+    title: "Suivie de l'etat du systeme",
+    title_en: 'Systeme Health Tracker',
+    description:
+      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
+    description_en:
+      'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
+    tags: ['React', 'NodeJs', 'Recharts'],
+    media: {
+      type: 'slides',
+      sources: ['/images/sysctl2.png'],
+    },
+    github: 'https://github.com/FIhaonantsoa',
+    status_fr: 'Projet académique',
+    status_en: 'Academic project',
+  },
+  {
     id: 1,
     title: 'Gestion de paiement eau & électricité',
     title_en: 'Water & Electricity Payment Management',
     description:
-      "Application web de gestion et de suivi des paiements d'eau et d'électricité. Développée en PHP / Laravel avec une interface moderne TailwindCSS.",
+      "Application web de gestion et de suivi des paiements d'eau et d'électricité. Développée en PHP avec une interface moderne TailwindCSS.",
     description_en:
-      'Web application for managing and tracking water and electricity payments. Built with PHP / Laravel and a modern TailwindCSS interface.',
-    tags: ['PHP', 'Laravel', 'TailwindCSS', 'MySQL'],
+      'Web application for managing and tracking water and electricity payments. Built with PHP and a modern TailwindCSS interface.',
+    tags: ['PHP', 'Laravel', 'TailwindCSS', 'PostgreSQL'],
     media: {
       type: 'slides',
-      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
+      sources: ['/images/php2.png', '/images/php.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Projet académique',
@@ -56,31 +107,14 @@ const projects: Project[] = [
       "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
     description_en:
       'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
-    tags: ['Java', 'MySQL', 'JavaFX'],
+    tags: ['Java Swing', 'MySQL'],
     media: {
       type: 'slides',
-      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
+      sources: ['/images/java2.webp', '/images/java.png', '/images/java3.webp'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Projet académique',
     status_en: 'Academic project',
-  },
-  {
-    id: 3,
-    title: 'App Mobile Suivi Santé',
-    title_en: 'Health Tracker Mobile App',
-    description:
-      'Application mobile React Native pour le suivi de la santé quotidienne. Notifications intelligentes, graphiques de progression et synchronisation cloud.',
-    description_en:
-      'React Native mobile app for daily health tracking. Smart notifications, progress charts and cloud sync.',
-    tags: ['React Native', 'Expo', 'Firebase', 'TypeScript'],
-    media: {
-      type: 'mobile',
-      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
-    },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Application mobile',
-    status_en: 'Mobile application',
   },
   {
     id: 4,
@@ -90,45 +124,10 @@ const projects: Project[] = [
       "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
     description_en:
       'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
-    tags: ['Java', 'MySQL', 'JavaFX'],
+    tags: ['VueJs', 'TailwindCSS', 'PHP', 'MySQL'],
     media: {
       type: 'slides',
-      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
-    },
-    github: 'https://github.com/FIhaonantsoa',
-    status_fr: 'Projet académique',
-    status_en: 'Academic project',
-  },
-  {
-    id: 5,
-    title: 'App Mobile E-Commerce',
-    title_en: 'E-Commerce Mobile App',
-    description:
-      'Application mobile de shopping avec panier, paiement intégré et suivi de commandes en temps réel. UX soignée et animations fluides.',
-    description_en:
-      'Shopping mobile app with cart, integrated payment and real-time order tracking. Polished UX and smooth animations.',
-    tags: ['Flutter', 'Dart', 'Stripe', 'Node.js'],
-    media: {
-      type: 'mobile',
-      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
-    },
-    github: 'https://github.com/FIhaonantsoa',
-    live: 'https://example.com',
-    status_fr: 'Application mobile',
-    status_en: 'Mobile application',
-  },
-  {
-    id: 6,
-    title: "Gestion des notes d'examen",
-    title_en: 'Exam Grade Management',
-    description:
-      "Application desktop de gestion et de suivi des notes d'examen des étudiants. Interface intuitive avec calcul automatique des moyennes.",
-    description_en:
-      'Desktop application for managing and tracking student exam grades. Intuitive interface with automatic average calculation.',
-    tags: ['Java', 'MySQL', 'JavaFX'],
-    media: {
-      type: 'slides',
-      sources: ['/images/java.png', '/images/php.png', '/images/vuejs.png'],
+      sources: ['/images/vue2.jpg', '/images/vuejs.png'],
     },
     github: 'https://github.com/FIhaonantsoa',
     status_fr: 'Projet académique',
@@ -218,8 +217,8 @@ function PhoneShell({ children }: { children: React.ReactNode }) {
     <div
       className="relative flex flex-col"
       style={{
-        width: '64px',
-        height: '128px',
+        width: '90px',
+        height: '180px',
         borderRadius: '16px',
         background: 'linear-gradient(160deg, #2a2a3a, #1a1a28)',
         border: '1.5px solid rgba(255,255,255,0.15)',
@@ -305,9 +304,6 @@ function SlidesViewer({ sources, title }: { sources: string[]; title: string }) 
       <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-1 rounded-full z-20"
         style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)' }}>
         <Monitor size={9} className="text-white/60" />
-        <span style={{ fontSize: '10px', fontWeight: 500, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.3px' }}>
-          Web / Desktop
-        </span>
       </div>
 
       {/* Bottom gradient */}
@@ -424,14 +420,14 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
           <button onClick={prev}
             className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
               flex items-center justify-center text-white
-              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+              opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-30"
             style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronLeft size={14} />
           </button>
           <button onClick={next}
             className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full
               flex items-center justify-center text-white
-              opacity-0 group-hover:opacity-100 transition-opacity z-30"
+              opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-30"
             style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronRight size={14} />
           </button>

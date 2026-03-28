@@ -37,7 +37,7 @@ Comportement attendu :
 const LOCAL_RESPONSES: { keywords: string[]; response: string }[] = [
   {
     keywords: ['bonjour', 'salut', 'hello', 'hi', 'bonsoir'],
-    response: "Bonjour ! Je suis l'assistant d'Ainamirindra. Je suis actuellement en mode hors-ligne, mais je peux quand même vous aider avec des informations de base. Que souhaitez-vous savoir ?",
+    response: "Bonjour ! Je suis l'assistant d'Ainamirindra. Que souhaitez-vous savoir ?",
   },
   {
     keywords: ['compétence', 'competence', 'skill', 'technologie', 'tech', 'stack'],
@@ -313,12 +313,6 @@ export default function ChatBot() {
                   Assistant IA
                 </p>
               </div>
-              <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                <span className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse
-                  ${hasLocalMessages ? 'bg-amber-400' : 'bg-emerald-400'}`}
-                />
-                {hasLocalMessages ? 'Hors-ligne' : 'En ligne'}
-              </span>
               <motion.button
                 onClick={() => setIsOpen(false)}
                 whileTap={{ scale: 0.9 }}
