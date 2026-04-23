@@ -31,7 +31,10 @@ Comportement attendu :
 - Réponds de façon professionnelle, chaleureuse et concise
 - Réponds en français par défaut, adapte-toi si le visiteur parle une autre langue
 - Pour toute question sur un projet précis, un tarif ou un délai, oriente poliment vers le formulaire de contact
-- Ne jamais inventer d'informations non listées ci-dessus`
+- Ne jamais inventer d'informations non listées ci-dessus
+-N'utilise pas des reponse en gras ou en italique, reste simple et direct
+- Si tu ne connais pas la réponse, dis-le clairement et propose de contacter Ainamirindra pour plus d'informations
+`
 
 // ─── Réponses locales de secours (UNIQUEMENT en cas d'erreur API) ─────────────────
 const LOCAL_RESPONSES: { keywords: string[]; response: string }[] = [
@@ -130,14 +133,10 @@ async function callGemini(messages: Message[]): Promise<{ text: string; isLocal:
     }))
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: conversationHistory,
-      config: {
-        systemInstruction: SYSTEM_PROMPT,
-        temperature: 0.7,
-        maxOutputTokens: 512,
-      }
-    })
+      model: "gemini-3-flash-preview",
+      contents: SYSTEM_PROMPT,
+    });
+    console.log(response.text);
 
     return {
       text: response.text || "Désolé, je n'ai pas pu générer une réponse.",

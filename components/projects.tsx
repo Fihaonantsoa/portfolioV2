@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { ExternalLink, Github, ChevronLeft, ChevronRight, Smartphone, Monitor } from 'lucide-react'
+import { ExternalLink, Github, ChevronLeft, ChevronRight, Smartphone, Monitor, Lock } from 'lucide-react'
 import { useLanguage } from '@/utils/language-context'
 import SectionTitle from '@/components/SectionTitle'
 import Image from 'next/image'
@@ -25,102 +25,119 @@ interface Project {
   media: ProjectMedia
   github?: string
   live?: string
+  isPrivate?: boolean
   status_fr: string
   status_en: string
 }
 
 // ─── Données projets ──────────────────────────────────────────────────────────
 const projects: Project[] = [
+  // ⭐ PROJET MOBILE MONEY MANAGER (id: 1) ⭐
   {
-      id: 6,
-      title: "Gestion des fichiers d'enquête",
-      title_en: "Survey files management",
-      description: "Application web de gestion des fichiers d'enquête, adaptée à la hiérarchie administrative de Madagascar (national, régional, communal, ...)",
-      description_en: "Web application for managing survey files, designed to align with Madagascar's administrative hierarchy (national, regional, communal levels)",
-      tags: ["Laravel", "React", "MySQL"],
-      media: {
-          type: "slides",
-          sources: ["/images/enquete.png", "/images/enquete1.png"]
-      },
-      github: "https://github.com/FIhaonantsoa",
-      status_fr: "Projet de stage",
-      status_en: "Internship project"
+    id: 1,
+    title: "Mobile Money Manager (Mvola)",
+    title_en: "Mobile Money Manager (Mvola)",
+    description: "Application web de gestion de mobile money avec JSP, Servlet et MySQL. Gestion des envois, retraits, frais, génération PDF et notifications par email.",
+    description_en: "Web application for mobile money management with JSP, Servlet and MySQL. Manage transfers, withdrawals, fees, PDF generation and email notifications.",
+    tags: ["Java/JSP", "Servlets", "MySQL", "HTML/CSS", "JavaScript"],
+    media: {
+      type: "slides",
+      sources: ["/images/mobilemoney1.png", "/images/mobilemoney2.png", "/images/mobilemoney3.png"]
+    },
+    live: "https://mobilemoney-raf.onrender.com",
+    status_fr: "Projet récent",
+    status_en: "Recent project"
+  },
+  {
+    id: 2,
+    title: "App Mobile de suivi de vente & stock (Biocfa)",
+    title_en: "Sales & Stock Tracker Mobile App (Biocfa)",
+    description: "Application mobile React Native pour le suivi des ventes et de la gestion des stocks. Projet confidentiel pour un client.",
+    description_en: "React Native mobile application for sales tracking and inventory management. Confidential project for a client.",
+    tags: ["React Native", "Expo", "TypeScript"],
+    media: {
+      type: "mobile",
+      sources: ["/images/native_bio1.png", "/images/native_bio2.png", "/images/native_bio3.png"]
+    },
+    isPrivate: true,  // ⭐ PROJET PRIVÉ - BioCFA
+    status_fr: "Projet client (Confidentiel)",
+    status_en: "Client project (Confidential)"
   },
   {
     id: 3,
-    title: "App Mobile de suivi de vente & stock",
-    title_en: "Sales & Stock Tracker Mobile App",
-    description: "Application mobile React Native pour le suivi des ventes et de la gestion des stocks",
-    description_en: "React Native mobile application for sales tracking and inventory management",
-    tags: ["React Native", "Expo", "TypeScript"],
+    title: "Gestion des fichiers d'enquête",
+    title_en: "Survey files management",
+    description: "Application web de gestion des fichiers d'enquête, adaptée à la hiérarchie administrative de Madagascar (national, régional, communal, ...)",
+    description_en: "Web application for managing survey files, designed to align with Madagascar's administrative hierarchy (national, regional, communal levels)",
+    tags: ["Laravel", "React", "MySQL"],
     media: {
-        type: "mobile",
-        sources: ["/images/native_bio1.png", "/images/native_bio2.png", "/images/native_bio3.png"]
+      type: "slides",
+      sources: ["/images/enquete.png", "/images/enquete1.png"]
     },
-    github: "https://github.com/FIhaonantsoa",
-    status_fr: "Application mobile",
-    status_en: "Mobile application"
+    isPrivate: true,  // ⭐ PROJET PRIVÉ - Stage
+    status_fr: "Projet de stage (Confidentiel)",
+    status_en: "Internship project (Confidential)"
   },
   {
-      id: 7,
-      title: "Suivi de l'état du système",
-      title_en: "System Health Tracker",
-      description: "Application de surveillance et de suivi de l'état du système, avec visualisation des métriques en temps réel",
-      description_en: "Desktop application for system health monitoring and tracking, featuring real-time metrics visualization",
-      tags: ["React", "NodeJs", "Recharts"],
-      media: {
-          type: "slides",
-          sources: ["/images/sysctl2.png"]
-      },
-      github: "https://github.com/FIhaonantsoa",
-      status_fr: "Projet académique",
-      status_en: "Academic project"
-  },
-  {
-    id: 1,
+    id: 4,
     title: "Gestion de paiement eau & électricité",
     title_en: "Water & Electricity Payment Management",
     description: "Application web de gestion et de suivi des paiements d'eau et d'électricité. Développée en PHP avec une interface moderne Bootstrap.",
     description_en: "Web application for managing and tracking water and electricity payments. Built with PHP and a modern Bootstrap interface.",
     tags: ["PHP", "Laravel", "Bootstrap", "PostgreSQL"],
     media: {
-        type: "slides",
-        sources: ["/images/php2.png", "/images/php.png"]
+      type: "slides",
+      sources: ["/images/php.png", "/images/php2.png"]
     },
-    github: "https://github.com/FIhaonantsoa",
+    github: "https://github.com/FIhaonantsoa/Gestion-de-Paiement.git",
     status_fr: "Projet académique",
     status_en: "Academic project"
   },
   {
-    id: 2,
+    id: 5,
     title: "Gestion d'emploi du temps",
     title_en: "Schedule Management",
     description: "Application desktop de gestion d'emploi du temps avec Java Swing et PostgreSQL. Interface intuitive pour la planification et le suivi des cours.",
     description_en: "Desktop application for schedule management with Java Swing and PostgreSQL. Intuitive interface for course planning and tracking.",
     tags: ["Java Swing", "MySQL"],
     media: {
-        type: "slides",
-        sources: ["/images/java2.webp", "/images/java.png", "/images/java3.webp"]
+      type: "slides",
+      sources: ["/images/java.png", "/images/java2.webp", "/images/java3.webp"]
     },
-    github: "https://github.com/FIhaonantsoa",
+    github: "https://github.com/FIhaonantsoa/Empoi-du-temps.git",
     status_fr: "Projet académique",
     status_en: "Academic project"
   },
   {
-    id: 4,
+    id: 6,
     title: "Location automobile",
     title_en: "Car Rental Management",
     description: "Application web de location automobile avec VueJs et MySQL. Interface moderne pour la gestion des véhicules, des réservations et des clients.",
     description_en: "Web application for car rental management with VueJs and MySQL. Modern interface for managing vehicles, reservations and customers.",
     tags: ["VueJs", "TailwindCSS", "PHP", "MySQL"],
     media: {
-        type: "slides",
-        sources: ["/images/vue2.jpg", "/images/vuejs.png"]
+      type: "slides",
+      sources: ["/images/vuejs.png", "/images/vue2.jpg"]
     },
-    github: "https://github.com/FIhaonantsoa",
+    github: "https://github.com/FIhaonantsoa/Location-automobile.git",
     status_fr: "Projet académique",
     status_en: "Academic project"
-}
+  },
+  {
+    id: 7,
+    title: "Suivi de l'état du système",
+    title_en: "System Health Tracker",
+    description: "Application de surveillance et de suivi de l'état du système, avec visualisation des métriques en temps réel",
+    description_en: "Desktop application for system health monitoring and tracking, featuring real-time metrics visualization",
+    tags: ["React", "NodeJs", "Recharts"],
+    media: {
+      type: "slides",
+      sources: ["/images/sysctl2.png"]
+    },
+    github: "https://github.com/FIhaonantsoa/EtatSysteme.git",
+    status_fr: "Projet académique",
+    status_en: "Academic project"
+  }
 ]
 
 // ─── Browser Mockup (fallback web/desktop) ────────────────────────────────────
@@ -161,11 +178,11 @@ function BrowserMockupFallback({ initial }: { initial: string }) {
   )
 }
 
-// ─── Phone Screen (BUG FIX: gradient UNDER image) ─────────────────────────────
+// ─── Phone Screen ─────────────────────────────────────────────────────────────
 function PhoneScreen({ src, title, index }: { src: string; title: string; index: number }) {
   return (
     <div className="relative w-full h-full">
-      {/* 1. Gradient fallback — EN DESSOUS (z-0) */}
+      {/* Gradient fallback */}
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -180,12 +197,12 @@ function PhoneScreen({ src, title, index }: { src: string; title: string; index:
         <div className="h-1.5 rounded-sm" style={{ width: '60%', background: 'rgba(255,255,255,0.10)' }} />
         <div className="h-1.5 rounded-sm" style={{ width: '45%', background: 'rgba(255,255,255,0.08)' }} />
       </div>
-      {/* 2. Initial fallback letter — z-[1] */}
+      {/* Initial fallback letter */}
       <span className="absolute inset-0 flex items-center justify-center z-[1] select-none pointer-events-none"
         style={{ fontSize: '24px', fontWeight: 900, color: 'rgba(255,255,255,0.12)' }}>
         {title.charAt(0)}
       </span>
-      {/* 3. Image — PAR-DESSUS (z-[2]) ← FIX DU BUG */}
+      {/* Image */}
       <Image
         src={src}
         alt={`${title} - screen ${index + 1}`}
@@ -263,7 +280,6 @@ function SlidesViewer({ sources, title }: { sources: string[]; title: string }) 
 
   return (
     <div className="relative w-full h-52 rounded-t-xl overflow-hidden group">
-      {/* Background */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
@@ -273,9 +289,7 @@ function SlidesViewer({ sources, title }: { sources: string[]; title: string }) 
           transition={{ duration: 0.25, ease: 'easeOut' }}
           className="absolute inset-0"
         >
-          {/* Fallback browser mockup */}
           <BrowserMockupFallback initial={title.charAt(0)} />
-          {/* Real image on top */}
           <Image
             src={sources[currentSlide]}
             alt={`${title} - slide ${currentSlide + 1}`}
@@ -288,13 +302,11 @@ function SlidesViewer({ sources, title }: { sources: string[]; title: string }) 
         </motion.div>
       </AnimatePresence>
 
-      {/* Platform badge */}
       <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-1 rounded-full z-20"
         style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)' }}>
         <Monitor size={9} className="text-white/60" />
       </div>
 
-      {/* Bottom gradient */}
       <div className="absolute inset-x-0 bottom-0 h-16 z-20 pointer-events-none"
         style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.25), transparent)' }} />
 
@@ -314,7 +326,6 @@ function SlidesViewer({ sources, title }: { sources: string[]; title: string }) 
             style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
             <ChevronRight size={14} />
           </button>
-          {/* Dots */}
           <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-30">
             {sources.map((_, i) => (
               <button
@@ -359,13 +370,11 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
         background: 'linear-gradient(145deg, #0d0d1a 0%, #150f30 50%, #0a0a1f 100%)',
       }}
     >
-      {/* Decorative orbs */}
       <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)' }} />
       <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%)' }} />
 
-      {/* Platform badge */}
       <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-1 rounded-full z-20"
         style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)' }}>
         <Smartphone size={9} className="text-white/60" />
@@ -374,9 +383,7 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
         </span>
       </div>
 
-      {/* Phones */}
       <div className="relative flex items-center justify-center h-full py-3">
-        {/* Back phone (depth effect) */}
         {isMulti && currentSlide < sources.length - 1 && (
           <div
             className="absolute"
@@ -388,7 +395,6 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
           </div>
         )}
 
-        {/* Main phone */}
         <motion.div
           key={currentSlide}
           initial={{ opacity: 0, scale: 0.93, y: 5 }}
@@ -402,7 +408,6 @@ function MobileViewer({ sources, title }: { sources: string[]; title: string }) 
         </motion.div>
       </div>
 
-      {/* Navigation */}
       {isMulti && (
         <>
           <button onClick={prev}
@@ -472,6 +477,7 @@ function ProjectCard({
   const description = lang === 'fr' ? project.description : project.description_en
   const status = lang === 'fr' ? project.status_fr : project.status_en
   const isMobile = project.media.type === 'mobile'
+  const isPrivate = project.isPrivate === true
 
   return (
     <motion.div
@@ -493,23 +499,21 @@ function ProjectCard({
         borderColor: isMobile ? 'rgba(139,92,246,0.25)' : 'rgba(0,0,0,0.14)',
       }}
     >
-      {/* ── Media zone ── */}
       <MediaViewer media={project.media} title={title} />
 
-      {/* ── Card body ── */}
       <div className="flex flex-col flex-1 p-5 gap-3.5">
 
-        {/* Status badge + title */}
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            {/* Glowing dot */}
             <span
               className="w-1.5 h-1.5 rounded-full flex-shrink-0"
               style={{
-                background: isMobile ? '#a78bfa' : '#34d399',
-                boxShadow: isMobile
-                  ? '0 0 0 2px rgba(167,139,250,0.2), 0 0 8px rgba(167,139,250,0.4)'
-                  : '0 0 0 2px rgba(52,211,153,0.2), 0 0 8px rgba(52,211,153,0.4)',
+                background: isPrivate ? '#f59e0b' : (isMobile ? '#a78bfa' : '#34d399'),
+                boxShadow: isPrivate
+                  ? '0 0 0 2px rgba(245,158,11,0.2), 0 0 8px rgba(245,158,11,0.4)'
+                  : (isMobile
+                    ? '0 0 0 2px rgba(167,139,250,0.2), 0 0 8px rgba(167,139,250,0.4)'
+                    : '0 0 0 2px rgba(52,211,153,0.2), 0 0 8px rgba(52,211,153,0.4)'),
               }}
             />
             <span
@@ -518,7 +522,7 @@ function ProjectCard({
                 fontSize: '10px',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
-                color: isMobile ? '#7c3aed' : '#059669',
+                color: isPrivate ? '#d97706' : (isMobile ? '#7c3aed' : '#059669'),
               }}
             >
               {status}
@@ -533,7 +537,6 @@ function ProjectCard({
           </h3>
         </div>
 
-        {/* Description */}
         <p
           className="flex-1 leading-relaxed text-gray-600 transition-colors duration-150 dark:text-gray-400"
           style={{ fontSize: '12.5px', lineHeight: 1.6 }}
@@ -541,7 +544,6 @@ function ProjectCard({
           {description}
         </p>
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-1.5">
           {project.tags.map((tag) => (
             <span
@@ -549,11 +551,17 @@ function ProjectCard({
               className="px-2.5 py-0.5 rounded-full font-medium"
               style={{
                 fontSize: '10.5px',
-                background: isMobile
-                  ? 'rgba(124,58,237,0.07)'
-                  : 'rgba(5,150,105,0.07)',
-                color: isMobile ? '#6d28d9' : '#047857',
-                border: `0.5px solid ${isMobile ? 'rgba(124,58,237,0.15)' : 'rgba(5,150,105,0.15)'}`,
+                background: isPrivate
+                  ? 'rgba(245,158,11,0.07)'
+                  : (isMobile
+                    ? 'rgba(124,58,237,0.07)'
+                    : 'rgba(5,150,105,0.07)'),
+                color: isPrivate ? '#d97706' : (isMobile ? '#6d28d9' : '#047857'),
+                border: `0.5px solid ${isPrivate 
+                  ? 'rgba(245,158,11,0.15)' 
+                  : (isMobile 
+                    ? 'rgba(124,58,237,0.15)' 
+                    : 'rgba(5,150,105,0.15)')}`,
               }}
             >
               {tag}
@@ -561,45 +569,54 @@ function ProjectCard({
           ))}
         </div>
 
-        {/* Footer links */}
         <div
           className="flex items-center gap-3 pt-3"
           style={{ borderTop: '0.5px solid rgba(0,0,0,0.07)' }}
         >
-          {project.github && (
-            <motion.a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className="flex items-center gap-1.5 transition-colors duration-150"
-              style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#374151')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
-            >
-              <Github size={13} />
-              <span>Code</span>
-            </motion.a>
-          )}
-          {project.live && (
-            <motion.a
-              href={project.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className="flex items-center gap-1.5 transition-colors duration-150"
-              style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#374151')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
-            >
-              <ExternalLink size={13} />
-              <span>Live</span>
-            </motion.a>
+          {isPrivate ? (
+            <div className="flex items-center gap-1.5">
+              <Lock size={12} style={{ color: '#d97706' }} />
+              <span style={{ fontSize: '11px', color: '#d97706', fontWeight: 500 }}>
+                Code source confidentiel
+              </span>
+            </div>
+          ) : (
+            <>
+              {project.github && (
+                <motion.a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="flex items-center gap-1.5 transition-colors duration-150"
+                  style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#374151')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
+                >
+                  <Github size={13} />
+                  <span>GitHub</span>
+                </motion.a>
+              )}
+              {project.live && (
+                <motion.a
+                  href={project.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="flex items-center gap-1.5 transition-colors duration-150"
+                  style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#374151')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
+                >
+                  <ExternalLink size={13} />
+                  <span>Demo</span>
+                </motion.a>
+              )}
+            </>
           )}
 
-          {/* Arrow button */}
           <motion.div
             className="ml-auto flex items-center justify-center rounded-full transition-all duration-200"
             style={{
@@ -612,8 +629,10 @@ function ProjectCard({
             }}
             whileHover={{
               rotate: 45,
-              borderColor: isMobile ? 'rgba(124,58,237,0.4)' : 'rgba(5,150,105,0.4)',
-              color: isMobile ? '#7c3aed' : '#059669',
+              borderColor: isPrivate 
+                ? 'rgba(245,158,11,0.4)' 
+                : (isMobile ? 'rgba(124,58,237,0.4)' : 'rgba(5,150,105,0.4)'),
+              color: isPrivate ? '#d97706' : (isMobile ? '#7c3aed' : '#059669'),
             }}
           >
             ↗
