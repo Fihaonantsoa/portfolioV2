@@ -1,0 +1,9 @@
+# Modifier le dernier commit pour retirer le fichier .env
+git rm --cached .env
+echo ".env" >> .gitignore
+
+# Corriger le dernier commit
+git commit --amend --no-edit
+
+# Maintenant tu peux push
+git push origin main --force-with-lease

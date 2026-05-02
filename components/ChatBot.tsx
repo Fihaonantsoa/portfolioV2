@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, Fragment } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Bot, User, Loader2, WifiOff } from 'lucide-react'
 
@@ -216,6 +216,16 @@ async function callOpenRouter(messages: Message[]): Promise<{ text: string; isLo
   return { text: getLocalResponse(lastUserMsg), isLocal: true }
 }
 
+function parseBold(text: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>
+    }
+    return part
+  })
+}
+
 // ─── Composant Message ────────────────────────────────────────────────────────
 function ChatMessage({ message, isLocal }: { message: Message; isLocal?: boolean }) {
   const isUser = message.role === 'user'
@@ -242,7 +252,12 @@ function ChatMessage({ message, isLocal }: { message: Message; isLocal?: boolean
                 : 'bg-card text-foreground border border-border rounded-tl-sm'
             }`}
         >
-          {message.content}
+          {message.content.split('\n').map((line, i, arr) => (
+            <Fragment key={i}>
+              {parseBold(line)}
+              {i < arr.length - 1 && <br />}
+            </Fragment>
+          ))}
         </div>
         {isLocal && !isUser && (
           <span className="flex items-center gap-1 text-[10px] text-muted-foreground mt-0.5">
