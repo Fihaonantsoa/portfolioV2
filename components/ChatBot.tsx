@@ -13,7 +13,16 @@ interface Message {
 
 // ─── Configuration OpenRouter ─────────────────────────────────────────────────
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions'
-const OPENROUTER_MODEL = 'meta-llama/llama-3.3-70b-instruct:free'
+
+// openrouter/free en tête : router officiel qui choisit parmi tous les modèles gratuits
+// disponibles — ne donne jamais de 404. Les suivants sont des fallbacks spécifiques vérifiés.
+const FREE_MODELS = [
+  'openrouter/free',
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'deepseek/deepseek-r1:free',
+  'google/gemma-3-12b-it:free',
+  'qwen/qwen3-8b:free',
+]
 
 const SYSTEM_PROMPT = `Tu es l'assistant personnel de Fihaonantsoa (RAFANOMANANA Ainamirindra Fihaonantsoa), 
 un développeur web passionné basé à Madagascar.
@@ -128,7 +137,43 @@ function getLocalResponse(input: string): string {
   return "Je ne peux pas répondre précisément à cela.\n\nVoici ce que je peux vous dire :\n• Compétences — React, Next.js, Node.js, TypeScript...\n• Stage — INSTAT Madagascar (2025)\n• Contact — fihaonantsoacgm@gmail.com\n\nPosez-moi une question sur ces sujets !"
 }
 
-// ─── Appel OpenRouter avec fallback local en cas d'erreur ─────────────────────
+// ─── Appel OpenRouter avec rotation de modèles et fallback local ──────────────
+async function tryModel(
+  model: string,
+  conversationMessages: { role: string; content: string }[],
+  apiKey: string
+): Promise<string> {
+  const response = await fetch(OPENROUTER_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+      'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
+      'X-Title': 'Portfolio Ainamirindra',
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...conversationMessages,
+      ],
+      max_tokens: 512,
+      temperature: 0.7,
+    }),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    const errMsg = errorData?.error?.message || response.statusText
+    throw new Error(`${response.status}:${errMsg}`)
+  }
+
+  const data = await response.json()
+  const text = data?.choices?.[0]?.message?.content?.trim()
+  if (!text) throw new Error('empty_response')
+  return text
+}
+
 async function callOpenRouter(messages: Message[]): Promise<{ text: string; isLocal: boolean }> {
   const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY
 
@@ -138,53 +183,37 @@ async function callOpenRouter(messages: Message[]): Promise<{ text: string; isLo
     return { text: getLocalResponse(lastUserMsg), isLocal: true }
   }
 
-  try {
-    // Construire l'historique de conversation correctement
-    const conversationMessages = messages.map((msg) => ({
-      role: msg.role, // 'user' | 'assistant' — déjà compatibles OpenAI
-      content: msg.content,
-    }))
+  const conversationMessages = messages.map((msg) => ({
+    role: msg.role,
+    content: msg.content,
+  }))
 
-    const response = await fetch(OPENROUTER_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-        'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'Portfolio Ainamirindra',
-      },
-      body: JSON.stringify({
-        model: OPENROUTER_MODEL,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          ...conversationMessages,
-        ],
-        max_tokens: 512,
-        temperature: 0.7,
-      }),
-    })
+  // Essayer chaque modèle dans l'ordre — passer au suivant si 429 ou erreur
+  for (let i = 0; i < FREE_MODELS.length; i++) {
+    const model = FREE_MODELS[i]
+    try {
+      const text = await tryModel(model, conversationMessages, apiKey)
+      return { text, isLocal: false }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : ''
+      // Passer au modèle suivant si : 429 (quota), 404 (modèle retiré), ou erreur provider
+      const is429 = msg.startsWith('429') || msg.includes('rate') || msg.includes('quota')
+      const is404 = msg.startsWith('404') || msg.includes('No endpoints')
+      const shouldRetry = is429 || is404
+      const isLast = i === FREE_MODELS.length - 1
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(
-        `OpenRouter API error ${response.status}: ${errorData?.error?.message || response.statusText}`
-      )
+      if (shouldRetry && !isLast) {
+        console.warn(`Modèle saturé (429): ${model}, passage au suivant...`)
+        continue
+      }
+      // Dernière tentative échouée ou erreur non-429 → fallback local
+      console.error(`Erreur modèle ${model}:`, msg)
+      break
     }
-
-    const data = await response.json()
-    const text = data?.choices?.[0]?.message?.content?.trim()
-
-    if (!text) {
-      throw new Error("Réponse vide reçue de l'API.")
-    }
-
-    return { text, isLocal: false }
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Erreur inconnue'
-    console.error('Erreur API OpenRouter:', message)
-    const lastUserMsg = messages[messages.length - 1]?.content || ''
-    return { text: getLocalResponse(lastUserMsg), isLocal: true }
   }
+
+  const lastUserMsg = messages[messages.length - 1]?.content || ''
+  return { text: getLocalResponse(lastUserMsg), isLocal: true }
 }
 
 // ─── Composant Message ────────────────────────────────────────────────────────
@@ -413,7 +442,7 @@ export default function ChatBot() {
                   animate={{ opacity: 1 }}
                   className="text-center text-xs text-destructive bg-destructive/10 rounded-lg px-3 py-2 border border-destructive/20"
                 >
-                  {error}
+                  ⚠️ {error}
                 </motion.div>
               )}
 
