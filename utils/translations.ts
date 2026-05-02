@@ -125,12 +125,12 @@ export const translations = {
       edu4_location: 'Antananarivo',
       edu4_desc: 'Graduated with honors in the science stream.',
 
-      edu5_title: 'French Language Diploma — Level B1',
+      edu5_title: 'French Language Diploma — Level B2',
       edu5_institution: '',
-      edu5_period: '2023',
+      edu5_period: '2026',
       edu5_focus: 'French Language Proficiency',
       edu5_location: '',
-      edu5_desc: 'Certified B1 level in French language proficiency.',
+      edu5_desc: 'Certified B2 level in French language proficiency.',
     },
 
     // Blog Section
@@ -313,12 +313,12 @@ export const translations = {
       edu4_location: 'Antananarivo',
       edu4_desc: 'Diplômé avec mention dans la filière scientifique.',
 
-      edu5_title: 'Diplôme de langue française — Niveau B1',
+      edu5_title: 'Diplôme de langue française — Niveau B2',
       edu5_institution: '',
-      edu5_period: '2023',
+      edu5_period: '2026',
       edu5_focus: 'Compétence en langue française',
       edu5_location: '',
-      edu5_desc: 'Certification de niveau B1 en langue française.',
+      edu5_desc: 'Certification de niveau B2 en langue française.',
     },
 
     // Blog Section

@@ -66,7 +66,7 @@ const LOCAL_RESPONSES: { keywords: string[]; response: string }[] = [
   {
     keywords: ['formation', 'étude', 'etude', 'education', 'eni', 'diplôme', 'diplome'],
     response:
-      "Ainamirindra est en 3ème année de Licence Professionnelle en Informatique à l'ENI de Fianarantsoa. Il a obtenu son Baccalauréat Série S (mention Assez-Bien) au Lycée Nanisana en 2023, et possède un diplôme de français niveau B1.",
+      "Ainamirindra est en 3ème année de Licence Professionnelle en Informatique à l'ENI de Fianarantsoa. Il a obtenu son Baccalauréat Série S (mention Assez-Bien) au Lycée Nanisana en 2023, et possède un diplôme de français niveau B2.",
   },
   {
     keywords: ['contact', 'email', 'mail', 'joindre', 'contacter', 'message'],
@@ -103,7 +103,7 @@ const LOCAL_RESPONSES: { keywords: string[]; response: string }[] = [
   {
     keywords: ['langue', 'language', 'parle', 'malagasy', 'français', 'anglais'],
     response:
-      "Ainamirindra parle 3 langues :\nMalagasy (langue maternelle)\nFrançais (courant, niveau B1 certifié)\nAnglais (notions)",
+      "Ainamirindra parle 3 langues :\nMalagasy (langue maternelle)\nFrançais (courant, niveau B2 certifié)\nAnglais (notions)",
   },
   {
     keywords: ['cv', 'curriculum', 'vitae', 'télécharger', 'download'],
@@ -131,7 +131,7 @@ function getLocalResponse(input: string): string {
   }
 
   if (lower.includes('?')) {
-    return `Je n'ai pas la réponse à cette question en mode hors-ligne.\n\nPour une réponse précise, contactez Ainamirindra :\nEmail : fihaonantsoacgm@gmail.com\nTél : +261 38 39 325 56\n\nOu utilisez le formulaire de contact.`
+    return `Je n'ai pas la réponse à cette question.\n\nPour une réponse précise, contactez Ainamirindra :\nEmail : fihaonantsoacgm@gmail.com\nTél : +261 38 39 325 56\n\nOu utilisez le formulaire de contact.`
   }
 
   return "Je ne peux pas répondre précisément à cela.\n\nVoici ce que je peux vous dire :\n• Compétences — React, Next.js, Node.js, TypeScript...\n• Stage — INSTAT Madagascar (2025)\n• Contact — fihaonantsoacgm@gmail.com\n\nPosez-moi une question sur ces sujets !"
@@ -259,12 +259,6 @@ function ChatMessage({ message, isLocal }: { message: Message; isLocal?: boolean
             </Fragment>
           ))}
         </div>
-        {isLocal && !isUser && (
-          <span className="flex items-center gap-1 text-[10px] text-muted-foreground mt-0.5">
-            <WifiOff className="w-2.5 h-2.5" />
-            Mode hors-ligne
-          </span>
-        )}
       </div>
     </motion.div>
   )
@@ -405,12 +399,6 @@ export default function ChatBot() {
                 <p className="text-sm font-bold text-gray-600 dark:text-white leading-none">
                   Assistant IA
                 </p>
-                {hasOfflineMessage && (
-                  <p className="text-[10px] text-amber-500 mt-0.5 flex items-center gap-1">
-                    <WifiOff className="w-2.5 h-2.5" />
-                    Mode hors-ligne actif
-                  </p>
-                )}
               </div>
               <motion.button
                 onClick={() => setIsOpen(false)}
