@@ -1,8 +1,7 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Bot, User, Loader2 } from 'lucide-react'
-import { GoogleGenAI } from "@google/genai"
+import { MessageCircle, X, Send, Bot, User, Loader2, WifiOff } from 'lucide-react'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Message {
@@ -12,10 +11,9 @@ interface Message {
   timestamp: Date
 }
 
-// ─── Configuration Gemini ─────────────────────────────────────────────────────
-const ai = new GoogleGenAI({
-  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY
-})
+// ─── Configuration OpenRouter ─────────────────────────────────────────────────
+const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions'
+const OPENROUTER_MODEL = 'meta-llama/llama-3.3-70b-instruct:free'
 
 const SYSTEM_PROMPT = `Tu es l'assistant personnel de Fihaonantsoa (RAFANOMANANA Ainamirindra Fihaonantsoa), 
 un développeur web passionné basé à Madagascar.
@@ -25,18 +23,17 @@ Voici ce que tu sais sur lui :
 - Profil GitHub : github.com/FIhaonantsoa
 - Actuellement disponible pour des missions, projets ou collaborations
 - Étudiant en informatique passionné par le développement web et les nouvelles technologies
-- Etudiant en Genie Logiciel et base de données à l'Ecole Nationale d'Informatique à Fianarantsoa
+- Etudiant en Génie Logiciel et bases de données à l'École Nationale d'Informatique à Fianarantsoa
 
 Comportement attendu :
 - Réponds de façon professionnelle, chaleureuse et concise
 - Réponds en français par défaut, adapte-toi si le visiteur parle une autre langue
 - Pour toute question sur un projet précis, un tarif ou un délai, oriente poliment vers le formulaire de contact
 - Ne jamais inventer d'informations non listées ci-dessus
--N'utilise pas des reponse en gras ou en italique, reste simple et direct
-- Si tu ne connais pas la réponse, dis-le clairement et propose de contacter Ainamirindra pour plus d'informations
-`
+- N'utilise pas de réponses en gras ou en italique, reste simple et direct
+- Si tu ne connais pas la réponse, dis-le clairement et propose de contacter Ainamirindra pour plus d'informations`
 
-// ─── Réponses locales de secours (UNIQUEMENT en cas d'erreur API) ─────────────────
+// ─── Réponses locales de secours (UNIQUEMENT en cas d'erreur API) ─────────────
 const LOCAL_RESPONSES: { keywords: string[]; response: string }[] = [
   {
     keywords: ['bonjour', 'salut', 'hello', 'hi', 'bonsoir'],
@@ -44,27 +41,33 @@ const LOCAL_RESPONSES: { keywords: string[]; response: string }[] = [
   },
   {
     keywords: ['compétence', 'competence', 'skill', 'technologie', 'tech', 'stack'],
-    response: "Ainamirindra maîtrise :\nFrontend — React, Next.js, TailwindCSS, Vue.js\nBackend — Laravel, PHP, Python\nBases de données — MySQL, PostgreSQL\nOutils — Git, GitHub, Linux\n\nConsultez la section Compétences pour plus de détails.",
+    response:
+      "Ainamirindra maîtrise :\nFrontend — React, Next.js, TailwindCSS\nBackend — Node.js, Python\nBases de données — MySQL, PostgreSQL\nOutils — Git, Docker, Linux\n\nConsultez la section Compétences pour plus de détails.",
   },
   {
     keywords: ['projet', 'project', 'réalisation', 'travaux'],
-    response: "Projets d'Ainamirindra :\n• Gestion eau & électricité — Application web de suivi des paiements\n• Gestion des notes — Application desktop pour les notes d'examen\n• Stage INSTAT — Plateforme de gestion hiérarchique des fichiers d'enquête (Laravel + React)\n\nConsultez la section Projets pour plus de détails.",
+    response:
+      "Projets d'Ainamirindra :\n• Gestion eau & électricité — Application web de suivi des paiements\n• Gestion des notes — Application desktop pour les notes d'examen\n• Stage INSTAT — Plateforme de gestion hiérarchique des fichiers d'enquête (Laravel + React)\n\nConsultez la section Projets pour plus de détails.",
   },
   {
     keywords: ['expérience', 'experience', 'stage', 'instat', 'travail'],
-    response: "Ainamirindra a effectué un stage à l'INSTAT Madagascar (DSIC) du 1er septembre au 30 novembre 2025. Il a développé une application web de gestion hiérarchique des fichiers d'enquête avec Laravel (API REST) et React, intégrant un système de permissions aligné sur la hiérarchie administrative nationale.",
+    response:
+      "Ainamirindra a effectué un stage à l'INSTAT Madagascar (DSIC) du 1er septembre au 30 novembre 2025. Il a développé une application web de gestion hiérarchique des fichiers d'enquête avec Laravel (API REST) et React, intégrant un système de permissions aligné sur la hiérarchie administrative nationale.",
   },
   {
     keywords: ['formation', 'étude', 'etude', 'education', 'eni', 'diplôme', 'diplome'],
-    response: "Ainamirindra est en 3ème année de Licence Professionnelle en Informatique à l'ENI de Fianarantsoa. Il a obtenu son Baccalauréat Série S (mention Assez-Bien) au Lycée Nanisana en 2023, et possède un diplôme de français niveau B1.",
+    response:
+      "Ainamirindra est en 3ème année de Licence Professionnelle en Informatique à l'ENI de Fianarantsoa. Il a obtenu son Baccalauréat Série S (mention Assez-Bien) au Lycée Nanisana en 2023, et possède un diplôme de français niveau B1.",
   },
   {
     keywords: ['contact', 'email', 'mail', 'joindre', 'contacter', 'message'],
-    response: "Vous pouvez contacter Ainamirindra via :\n📧 fihaonantsoacgm@gmail.com\n📞 +261 38 39 325 56\n🌐 www.fihaonantsoa.vercel.app\n\nOu utilisez le formulaire de contact en bas de cette page.",
+    response:
+      "Vous pouvez contacter Ainamirindra via :\nEmail : fihaonantsoacgm@gmail.com\nTél : +261 38 39 325 56\nSite : www.fihaonantsoa.vercel.app\n\nOu utilisez le formulaire de contact en bas de cette page.",
   },
   {
     keywords: ['disponible', 'disponibilité', 'libre', 'recrutement', 'embauche', 'freelance'],
-    response: "Ainamirindra est disponible pour des opportunités de stage, de collaboration ou de freelance. Contactez-le à fihaonantsoacgm@gmail.com ou via le formulaire de contact.",
+    response:
+      "Ainamirindra est disponible pour des opportunités de stage, de collaboration ou de freelance. Contactez-le à fihaonantsoacgm@gmail.com ou via le formulaire de contact.",
   },
   {
     keywords: ['github', 'code', 'repository', 'repo'],
@@ -72,86 +75,116 @@ const LOCAL_RESPONSES: { keywords: string[]; response: string }[] = [
   },
   {
     keywords: ['madagascar', 'localisation', 'location', 'où', 'ou', 'pays'],
-    response: "Ainamirindra est basé à Fianarantsoa, Madagascar. Il est originaire d'Antananarivo.",
+    response:
+      "Ainamirindra est basé à Fianarantsoa, Madagascar. Il est originaire d'Antananarivo.",
   },
   {
     keywords: ['âge', 'age', 'né', 'naissance', 'ans'],
     response: "Ainamirindra est né le 5 mars 2008, il a 18 ans.",
-  },  
+  },
   {
     keywords: ['merci', 'thank', 'thanks', 'parfait', 'super', 'génial', 'cool'],
-    response: "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. 😊",
+    response: "Avec plaisir ! N'hésitez pas si vous avez d'autres questions.",
   },
   {
     keywords: ['qui', 'présente', 'présentation', 'profil', 'about', 'à propos'],
-    response: "Ainamirindra RAFANOMANANA est un étudiant en 3ème année de Licence en Informatique à l'ENI Fianarantsoa, Madagascar. Passionné par le développement web fullstack, il maîtrise Laravel, React, et plusieurs autres technologies modernes.",
+    response:
+      "Ainamirindra RAFANOMANANA est un étudiant en 3ème année de Licence en Informatique à l'ENI Fianarantsoa, Madagascar. Passionné par le développement web fullstack, il maîtrise React, Next.js, Node.js et plusieurs autres technologies modernes.",
   },
   {
     keywords: ['langue', 'language', 'parle', 'malagasy', 'français', 'anglais'],
-    response: "Ainamirindra parle 3 langues :\n🇲🇬 Malagasy (langue maternelle)\n🇫🇷 Français (courant, niveau B1 certifié)\n🇬🇧 Anglais (notions)",
+    response:
+      "Ainamirindra parle 3 langues :\nMalagasy (langue maternelle)\nFrançais (courant, niveau B1 certifié)\nAnglais (notions)",
   },
   {
     keywords: ['cv', 'curriculum', 'vitae', 'télécharger', 'download'],
-    response: "Vous pouvez télécharger le CV d'Ainamirindra directement depuis la section Hero du portfolio (bouton 'Télécharger le CV').",
+    response:
+      "Vous pouvez télécharger le CV d'Ainamirindra directement depuis la section Hero du portfolio (bouton 'Télécharger le CV').",
   },
   {
     keywords: ['prix', 'tarif', 'coût', 'cout', 'combien', 'devis'],
-    response: "Pour connaître les tarifs ou obtenir un devis, contactez Ainamirindra directement :\n📧 fihaonantsoacgm@gmail.com\n📞 +261 38 39 325 56",
+    response:
+      "Pour connaître les tarifs ou obtenir un devis, contactez Ainamirindra directement :\nEmail : fihaonantsoacgm@gmail.com\nTél : +261 38 39 325 56",
   },
 ]
 
 function getLocalResponse(input: string): string {
   const lower = input.toLowerCase().trim()
 
-  // Correspondance par mots-clés
   for (const item of LOCAL_RESPONSES) {
     if (item.keywords.some((kw) => lower.includes(kw))) {
       return item.response
     }
   }
 
-  // Questions très courtes ou vides
   if (lower.length < 4) {
-    return "Pourriez-vous préciser votre question ? Je ferai de mon mieux pour vous répondre."
+    return 'Pourriez-vous préciser votre question ? Je ferai de mon mieux pour vous répondre.'
   }
 
-  // Questions avec '?' → reformuler vers le contact
   if (lower.includes('?')) {
-    return `Je n'ai pas la réponse à cette question en mode hors-ligne.\n\nPour une réponse précise, contactez Ainamirindra :\n📧 fihaonantsoacgm@gmail.com\n📞 +261 38 39 325 56\n\nOu utilisez le formulaire de contact.`
+    return `Je n'ai pas la réponse à cette question en mode hors-ligne.\n\nPour une réponse précise, contactez Ainamirindra :\nEmail : fihaonantsoacgm@gmail.com\nTél : +261 38 39 325 56\n\nOu utilisez le formulaire de contact.`
   }
 
-  // Réponse générique par défaut
-  return "Je ne peux pas répondre à cette question précisément.\n\nVoici ce que je peux vous dire :\n• Compétences — React, Laravel, Next.js, MySQL...\n• Stage — INSTAT Madagascar (2025)\n• Contact — fihaonantsoacgm@gmail.com\n\nPosez-moi une question sur ces sujets !"
+  return "Je ne peux pas répondre précisément à cela.\n\nVoici ce que je peux vous dire :\n• Compétences — React, Next.js, Node.js, TypeScript...\n• Stage — INSTAT Madagascar (2025)\n• Contact — fihaonantsoacgm@gmail.com\n\nPosez-moi une question sur ces sujets !"
 }
 
-// ─── Appel Gemini PRIORITAIRE avec fallback local UNIQUEMENT en cas d'erreur ─────────────────
-async function callGemini(messages: Message[]): Promise<{ text: string; isLocal: boolean }> {
-  try {
-    const conversationHistory = messages.map(msg => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }]
-    }))
+// ─── Appel OpenRouter avec fallback local en cas d'erreur ─────────────────────
+async function callOpenRouter(messages: Message[]): Promise<{ text: string; isLocal: boolean }> {
+  const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: SYSTEM_PROMPT,
-    });
-    console.log(response.text);
-
-    return {
-      text: response.text || "Désolé, je n'ai pas pu générer une réponse.",
-      isLocal: false,
-    }
-  } catch (error: any) {
-    // En cas d'ERREUR API (quelconque), on utilise le mode hors-ligne
-    console.error('Erreur API Gemini:', error)
+  if (!apiKey) {
+    console.warn('Clé API OpenRouter manquante, passage en mode hors-ligne.')
     const lastUserMsg = messages[messages.length - 1]?.content || ''
     return { text: getLocalResponse(lastUserMsg), isLocal: true }
   }
-}
 
-function formatTime(date: Date) {
-  return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  try {
+    // Construire l'historique de conversation correctement
+    const conversationMessages = messages.map((msg) => ({
+      role: msg.role, // 'user' | 'assistant' — déjà compatibles OpenAI
+      content: msg.content,
+    }))
+
+    const response = await fetch(OPENROUTER_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+        'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
+        'X-Title': 'Portfolio Ainamirindra',
+      },
+      body: JSON.stringify({
+        model: OPENROUTER_MODEL,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          ...conversationMessages,
+        ],
+        max_tokens: 512,
+        temperature: 0.7,
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(
+        `OpenRouter API error ${response.status}: ${errorData?.error?.message || response.statusText}`
+      )
+    }
+
+    const data = await response.json()
+    const text = data?.choices?.[0]?.message?.content?.trim()
+
+    if (!text) {
+      throw new Error("Réponse vide reçue de l'API.")
+    }
+
+    return { text, isLocal: false }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Erreur inconnue'
+    console.error('Erreur API OpenRouter:', message)
+    const lastUserMsg = messages[messages.length - 1]?.content || ''
+    return { text: getLocalResponse(lastUserMsg), isLocal: true }
+  }
 }
 
 // ─── Composant Message ────────────────────────────────────────────────────────
@@ -174,13 +207,20 @@ function ChatMessage({ message, isLocal }: { message: Message; isLocal?: boolean
       <div className={`flex flex-col gap-0.5 max-w-[78%] ${isUser ? 'items-end' : 'items-start'}`}>
         <div
           className={`px-3 py-2 rounded-2xl text-sm leading-relaxed whitespace-pre-line
-            ${isUser
-              ? 'bg-accent text-white rounded-tr-sm'
-              : 'bg-card text-foreground border border-border rounded-tl-sm'
+            ${
+              isUser
+                ? 'bg-accent text-white rounded-tr-sm'
+                : 'bg-card text-foreground border border-border rounded-tl-sm'
             }`}
         >
           {message.content}
         </div>
+        {isLocal && !isUser && (
+          <span className="flex items-center gap-1 text-[10px] text-muted-foreground mt-0.5">
+            <WifiOff className="w-2.5 h-2.5" />
+            Mode hors-ligne
+          </span>
+        )}
       </div>
     </motion.div>
   )
@@ -201,7 +241,6 @@ export default function ChatBot() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isOfflineMode, setIsOfflineMode] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -210,10 +249,13 @@ export default function ChatBot() {
   }, [messages, isLoading])
 
   useEffect(() => {
-    if (isOpen) setTimeout(() => inputRef.current?.focus(), 300)
+    if (isOpen) {
+      const timer = setTimeout(() => inputRef.current?.focus(), 300)
+      return () => clearTimeout(timer)
+    }
   }, [isOpen])
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     const text = input.trim()
     if (!text || isLoading) return
 
@@ -224,44 +266,40 @@ export default function ChatBot() {
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, userMsg])
+    const updatedMessages = [...messages, userMsg]
+    setMessages(updatedMessages)
     setInput('')
     setIsLoading(true)
     setError(null)
 
     try {
-      const allMessages = [...messages, userMsg]
-      const { text: reply, isLocal } = await callGemini(allMessages)
+      const { text: reply, isLocal } = await callOpenRouter(updatedMessages)
       const aiId = `ai-${Date.now()}`
+
       setMessages((prev) => [
         ...prev,
         { id: aiId, role: 'assistant', content: reply, timestamp: new Date() },
       ])
-      
+
       if (isLocal) {
         setLocalFlags((prev) => ({ ...prev, [aiId]: true }))
-        setIsOfflineMode(true)
-      } else {
-        // Si on reçoit une réponse normale de l'API, on sort du mode hors-ligne
-        setIsOfflineMode(false)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue.')
-      setIsOfflineMode(true)
+      const message = err instanceof Error ? err.message : 'Une erreur est survenue.'
+      setError(message)
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [input, isLoading, messages])
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
     }
   }
 
-  // Vérifier si au moins un message récent est en mode local
-  const hasLocalMessages = Object.values(localFlags).some(Boolean)
+  const hasOfflineMessage = Object.values(localFlags).some(Boolean)
 
   return (
     <>
@@ -272,15 +310,27 @@ export default function ChatBot() {
           bg-accent flex items-center justify-center text-white"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.93 }}
-        aria-label="Ouvrir le chatbot"
+        aria-label={isOpen ? 'Fermer le chatbot' : 'Ouvrir le chatbot'}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
-            <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
+            <motion.span
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
               <X className="w-6 h-6" />
             </motion.span>
           ) : (
-            <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
+            <motion.span
+              key="open"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
               <MessageCircle className="w-6 h-6" />
             </motion.span>
           )}
@@ -311,12 +361,19 @@ export default function ChatBot() {
                 <p className="text-sm font-bold text-gray-600 dark:text-white leading-none">
                   Assistant IA
                 </p>
+                {hasOfflineMessage && (
+                  <p className="text-[10px] text-amber-500 mt-0.5 flex items-center gap-1">
+                    <WifiOff className="w-2.5 h-2.5" />
+                    Mode hors-ligne actif
+                  </p>
+                )}
               </div>
               <motion.button
                 onClick={() => setIsOpen(false)}
                 whileTap={{ scale: 0.9 }}
                 className="w-7 h-7 rounded-md flex items-center justify-center
                   text-muted-foreground hover:text-accent hover:bg-accent/10 transition-colors"
+                aria-label="Fermer"
               >
                 <X className="w-4 h-4" />
               </motion.button>
@@ -325,11 +382,7 @@ export default function ChatBot() {
             {/* ── Messages ── */}
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scroll-smooth">
               {messages.map((msg) => (
-                <ChatMessage
-                  key={msg.id}
-                  message={msg}
-                  isLocal={localFlags[msg.id]}
-                />
+                <ChatMessage key={msg.id} message={msg} isLocal={localFlags[msg.id]} />
               ))}
 
               {isLoading && (
@@ -360,7 +413,7 @@ export default function ChatBot() {
                   animate={{ opacity: 1 }}
                   className="text-center text-xs text-destructive bg-destructive/10 rounded-lg px-3 py-2 border border-destructive/20"
                 >
-                  ⚠️ {error}
+                  {error}
                 </motion.div>
               )}
 
@@ -369,16 +422,19 @@ export default function ChatBot() {
 
             {/* ── Input ── */}
             <div className="flex-shrink-0 px-4 py-3 border-t border-border bg-card">
-              <div className="flex items-center gap-2 bg-background rounded-lg px-3 py-2
-                border border-border focus-within:border-accent/50 transition-colors">
+              <div
+                className="flex items-center gap-2 bg-background rounded-lg px-3 py-2
+                border border-border focus-within:border-accent/50 transition-colors"
+              >
                 <input
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={hasLocalMessages ? "Posez votre question…" : "Posez votre question…"}
+                  placeholder="Posez votre question…"
                   disabled={isLoading}
                   className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none disabled:opacity-50"
+                  maxLength={500}
                 />
                 <motion.button
                   onClick={handleSend}
@@ -386,11 +442,13 @@ export default function ChatBot() {
                   whileTap={{ scale: 0.88 }}
                   className="w-7 h-7 rounded-md bg-accent flex items-center justify-center text-white
                     disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                  aria-label="Envoyer"
                 >
-                  {isLoading
-                    ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    : <Send className="w-3.5 h-3.5" />
-                  }
+                  {isLoading ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
                 </motion.button>
               </div>
               <p className="text-[10px] text-muted-foreground text-center mt-1.5">
