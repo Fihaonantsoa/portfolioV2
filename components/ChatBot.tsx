@@ -11,18 +11,11 @@ interface Message {
   timestamp: Date
 }
 
-// ─── Configuration OpenRouter ─────────────────────────────────────────────────
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions'
-
-// openrouter/free en tête : router officiel qui choisit parmi tous les modèles gratuits
-// disponibles — ne donne jamais de 404. Les suivants sont des fallbacks spécifiques vérifiés.
-const FREE_MODELS = [
-  'openrouter/free',
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'deepseek/deepseek-r1:free',
-  'google/gemma-3-12b-it:free',
-  'qwen/qwen3-8b:free',
-]
+// ─── Configuration Groq ────────────────────────────────────────────────────────
+// Endpoint OpenAI-compatible de Groq — utilisé via fetch (et non le SDK officiel
+// "groq-sdk", pensé pour Node.js) puisque ce composant tourne côté navigateur.
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
+const GROQ_MODEL = 'qwen/qwen3-32b'
 
 const SYSTEM_PROMPT = `Tu es l'assistant personnel de Fihaonantsoa (RAFANOMANANA Ainamirindra Fihaonantsoa), 
 un développeur web passionné basé à Madagascar.
@@ -137,28 +130,32 @@ function getLocalResponse(input: string): string {
   return "Je ne peux pas répondre précisément à cela.\n\nVoici ce que je peux vous dire :\n• Compétences — React, Next.js, Node.js, TypeScript...\n• Stage — INSTAT Madagascar (2025)\n• Contact — fihaonantsoacgm@gmail.com\n\nPosez-moi une question sur ces sujets !"
 }
 
-// ─── Appel OpenRouter avec rotation de modèles et fallback local ──────────────
-async function tryModel(
-  model: string,
+// ─── Appel Groq (streaming) avec fallback local ───────────────────────────────
+async function streamGroqResponse(
   conversationMessages: { role: string; content: string }[],
-  apiKey: string
+  apiKey: string,
+  onChunk: (textSoFar: string) => void
 ): Promise<string> {
-  const response = await fetch(OPENROUTER_API_URL, {
+  const response = await fetch(GROQ_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
-      'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-      'X-Title': 'Portfolio Ainamirindra',
     },
     body: JSON.stringify({
-      model,
+      model: GROQ_MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         ...conversationMessages,
       ],
-      max_tokens: 512,
-      temperature: 0.7,
+      temperature: 0.6,
+      max_completion_tokens: 1024,
+      top_p: 0.95,
+      stream: true,
+      reasoning_effort: 'default',
+      // "hidden" évite que le raisonnement interne du modèle (balises <think>) ne
+      // s'affiche dans la bulle de chat — seule la réponse finale est streamée.
+      reasoning_format: 'hidden',
     }),
   })
 
@@ -168,17 +165,52 @@ async function tryModel(
     throw new Error(`${response.status}:${errMsg}`)
   }
 
-  const data = await response.json()
-  const text = data?.choices?.[0]?.message?.content?.trim()
-  if (!text) throw new Error('empty_response')
-  return text
+  if (!response.body) throw new Error('no_stream_body')
+
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  let fullText = ''
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+
+    const lines = buffer.split('\n')
+    buffer = lines.pop() || '' // conserve la ligne incomplète pour le prochain tour
+
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed.startsWith('data:')) continue
+      const dataStr = trimmed.slice(5).trim()
+      if (!dataStr || dataStr === '[DONE]') continue
+
+      try {
+        const json = JSON.parse(dataStr)
+        const delta = json?.choices?.[0]?.delta?.content
+        if (delta) {
+          fullText += delta
+          onChunk(fullText)
+        }
+      } catch {
+        // fragment JSON incomplet — ignoré, sera recomposé au prochain chunk
+      }
+    }
+  }
+
+  if (!fullText.trim()) throw new Error('empty_response')
+  return fullText
 }
 
-async function callOpenRouter(messages: Message[]): Promise<{ text: string; isLocal: boolean }> {
-  const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY
+async function callGroq(
+  messages: Message[],
+  onChunk: (textSoFar: string) => void
+): Promise<{ text: string; isLocal: boolean }> {
+  const apiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY
 
   if (!apiKey) {
-    console.warn('Clé API OpenRouter manquante, passage en mode hors-ligne.')
+    console.warn('Clé API Groq manquante, passage en mode hors-ligne.')
     const lastUserMsg = messages[messages.length - 1]?.content || ''
     return { text: getLocalResponse(lastUserMsg), isLocal: true }
   }
@@ -188,32 +220,15 @@ async function callOpenRouter(messages: Message[]): Promise<{ text: string; isLo
     content: msg.content,
   }))
 
-  // Essayer chaque modèle dans l'ordre — passer au suivant si 429 ou erreur
-  for (let i = 0; i < FREE_MODELS.length; i++) {
-    const model = FREE_MODELS[i]
-    try {
-      const text = await tryModel(model, conversationMessages, apiKey)
-      return { text, isLocal: false }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : ''
-      // Passer au modèle suivant si : 429 (quota), 404 (modèle retiré), ou erreur provider
-      const is429 = msg.startsWith('429') || msg.includes('rate') || msg.includes('quota')
-      const is404 = msg.startsWith('404') || msg.includes('No endpoints')
-      const shouldRetry = is429 || is404
-      const isLast = i === FREE_MODELS.length - 1
-
-      if (shouldRetry && !isLast) {
-        console.warn(`Modèle saturé (429): ${model}, passage au suivant...`)
-        continue
-      }
-      // Dernière tentative échouée ou erreur non-429 → fallback local
-      console.error(`Erreur modèle ${model}:`, msg)
-      break
-    }
+  try {
+    const text = await streamGroqResponse(conversationMessages, apiKey, onChunk)
+    return { text, isLocal: false }
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : ''
+    console.error('Erreur Groq:', msg)
+    const lastUserMsg = messages[messages.length - 1]?.content || ''
+    return { text: getLocalResponse(lastUserMsg), isLocal: true }
   }
-
-  const lastUserMsg = messages[messages.length - 1]?.content || ''
-  return { text: getLocalResponse(lastUserMsg), isLocal: true }
 }
 
 function parseBold(text: string): React.ReactNode[] {
@@ -310,14 +325,35 @@ export default function ChatBot() {
     setIsLoading(true)
     setError(null)
 
-    try {
-      const { text: reply, isLocal } = await callOpenRouter(updatedMessages)
-      const aiId = `ai-${Date.now()}`
+    const aiId = `ai-${Date.now()}`
+    let started = false
 
-      setMessages((prev) => [
-        ...prev,
-        { id: aiId, role: 'assistant', content: reply, timestamp: new Date() },
-      ])
+    try {
+      const { text: reply, isLocal } = await callGroq(updatedMessages, (partial) => {
+        if (!started) {
+          started = true
+          // Première portion de texte reçue → on insère la bulle assistant
+          setMessages((prev) => [
+            ...prev,
+            { id: aiId, role: 'assistant', content: partial, timestamp: new Date() },
+          ])
+        } else {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === aiId ? { ...m, content: partial } : m))
+          )
+        }
+      })
+
+      if (started) {
+        // S'assure que la version finale (complète) est bien affichée
+        setMessages((prev) => prev.map((m) => (m.id === aiId ? { ...m, content: reply } : m)))
+      } else {
+        // Aucun chunk streamé (ex: fallback local) → on ajoute la réponse complète
+        setMessages((prev) => [
+          ...prev,
+          { id: aiId, role: 'assistant', content: reply, timestamp: new Date() },
+        ])
+      }
 
       if (isLocal) {
         setLocalFlags((prev) => ({ ...prev, [aiId]: true }))
