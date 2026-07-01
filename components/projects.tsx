@@ -44,7 +44,7 @@ const projects: Project[] = [
       type: "slides",
       sources: ["/images/mobilemoney1.png", "/images/mobilemoney2.png", "/images/mobilemoney3.png"]
     },
-    live: "https://mobilemoney-raf.onrender.com/login.jsp",
+    github: "https://github.com/FIhaonantsoa/Empoi-du-temps.git",
     status_fr: "Projet récent",
     status_en: "Recent project"
   },
