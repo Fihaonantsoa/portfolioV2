@@ -32,7 +32,6 @@ interface Project {
 
 // ─── Données projets ──────────────────────────────────────────────────────────
 const projects: Project[] = [
-  // ⭐ PROJET MOBILE MONEY MANAGER (id: 1) ⭐
   {
     id: 1,
     title: "Mobile Money Manager (Mvola)",
