@@ -329,6 +329,18 @@ export default function Hero() {
               <Github size={16} />
               GitHub
             </motion.a>
+
+            {/* Nouveau bouton CV */}
+            <motion.a
+              href="/CV_Fihaonantsoa_Ainamirindra_RAFANOMANANA.pdf"
+              download
+              className="px-5 py-2.5 bg-muted text-foreground rounded-full font-semibold hover:bg-muted/80 transition-all flex items-center gap-2 text-sm"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Download size={16} />
+              {t('hero.cta_cv')}
+            </motion.a>
           </motion.div>
 
           {/* Skills avec tooltips */}
