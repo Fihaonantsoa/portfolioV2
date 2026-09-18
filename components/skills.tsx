@@ -4,21 +4,23 @@ import { useInView } from 'react-intersection-observer'
 import { useLanguage } from '@/utils/language-context'
 import SectionTitle from '@/components/SectionTitle'
 import {
-  SiPython, SiPhp, SiOpenjdk, SiKotlin,
+  SiPython, SiPhp, SiKotlin,
   SiTailwindcss, SiReact, SiLaravel, SiNextdotjs,
   SiBootstrap, SiVuedotjs,
   SiMysql, SiPostgresql,
-  SiGit, SiGithub, SiLinux, SiAdobephotoshop, SiCanva,
-  SiJavascript, SiTypescript, SiCss3, SiHtml5,
+  SiGit, SiGithub, SiLinux,
+  SiJavascript, SiTypescript, SiCss, SiHtml5,
 } from 'react-icons/si'
-import { FaJava, FaMicrosoft } from 'react-icons/fa'
+import { FaJava, FaMicrosoft, FaPaintBrush } from 'react-icons/fa'
 import type { IconType } from 'react-icons'
-import { CodeIcon, GlobeIcon, DatabaseIcon, WrenchIcon } from 'lucide-react'
+import {
+  CodeIcon, GlobeIcon, DatabaseIcon, WrenchIcon, Palette,
+} from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Skill {
   name: string
-  icon: IconType
+  icon: IconType | React.ElementType
   color: string
 }
 
@@ -38,10 +40,10 @@ const categories: Category[] = [
     label_en: 'Programming Languages',
     icon: CodeIcon,
     skills: [
-      { name: 'Python', icon: SiPython,     color: '#3776AB' },
-      { name: 'PHP',    icon: SiPhp,        color: '#777BB4' },
-      { name: 'Java',   icon: FaJava,       color: '#007396' },
-      { name: 'Kotlin', icon: SiKotlin,     color: '#7F52FF' },
+      { name: 'Python',     icon: SiPython,     color: '#3776AB' },
+      { name: 'PHP',        icon: SiPhp,        color: '#777BB4' },
+      { name: 'Java',       icon: FaJava,       color: '#007396' },
+      { name: 'Kotlin',     icon: SiKotlin,     color: '#7F52FF' },
       { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
       { name: 'TypeScript', icon: SiTypescript, color: '#3178C6' },
     ],
@@ -60,7 +62,7 @@ const categories: Category[] = [
       { name: 'Bootstrap',    icon: SiBootstrap,   color: '#7952B3' },
       { name: 'Vue.js',       icon: SiVuedotjs,    color: '#4FC08D' },
       { name: 'HTML5',        icon: SiHtml5,       color: '#E34F26' },
-      { name: 'CSS3',         icon: SiCss3,        color: '#1572B6' },
+      { name: 'CSS3',         icon: SiCss,         color: '#1572B6' },
     ],
   },
   {
@@ -79,12 +81,12 @@ const categories: Category[] = [
     label_en: 'Tools & Environment',
     icon: WrenchIcon,
     skills: [
-      { name: 'Microsoft Office', icon: FaMicrosoft,     color: '#D83B01' },
-      { name: 'Git',              icon: SiGit,           color: '#F05032' },
-      { name: 'GitHub',           icon: SiGithub,        color: '#181717' },
-      { name: 'Linux',            icon: SiLinux,         color: '#FCC624' },
-      { name: 'Photoshop',        icon: SiAdobephotoshop,color: '#31A8FF' },
-      { name: 'Canva',            icon: SiCanva,         color: '#00C4CC' },
+      { name: 'Microsoft Office', icon: FaMicrosoft,  color: '#D83B01' },
+      { name: 'Git',              icon: SiGit,        color: '#F05032' },
+      { name: 'GitHub',           icon: SiGithub,     color: '#181717' },
+      { name: 'Linux',            icon: SiLinux,      color: '#FCC624' },
+      { name: 'Photoshop',        icon: FaPaintBrush, color: '#31A8FF' },
+      { name: 'Canva',            icon: Palette,      color: '#00C4CC' },
     ],
   },
 ]
@@ -95,7 +97,7 @@ function SkillItem({
 }: {
   skill: Skill; inView: boolean; delay: number
 }) {
-  const Icon = skill.icon
+  const Icon = skill.icon as IconType
   return (
     <motion.div
       initial={{ opacity: 0, y: 10, scale: 0.95 }}
