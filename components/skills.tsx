@@ -3,19 +3,47 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useLanguage } from '@/utils/language-context'
 import SectionTitle from '@/components/SectionTitle'
+import {
+  SiPython, SiPhp, SiOpenjdk, SiKotlin,
+  SiTailwindcss, SiReact, SiLaravel, SiNextdotjs,
+  SiBootstrap, SiVuedotjs,
+  SiMysql, SiPostgresql,
+  SiGit, SiGithub, SiLinux, SiAdobephotoshop, SiCanva,
+  SiJavascript, SiTypescript, SiCss3, SiHtml5,
+} from 'react-icons/si'
+import { FaJava, FaMicrosoft } from 'react-icons/fa'
+import type { IconType } from 'react-icons'
 import { CodeIcon, GlobeIcon, DatabaseIcon, WrenchIcon } from 'lucide-react'
 
-const categories = [
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface Skill {
+  name: string
+  icon: IconType
+  color: string
+}
+
+interface Category {
+  key: string
+  label_fr: string
+  label_en: string
+  icon: React.ElementType
+  skills: Skill[]
+}
+
+// ─── Données ──────────────────────────────────────────────────────────────────
+const categories: Category[] = [
   {
     key: 'languages',
     label_fr: 'Langages de programmation',
     label_en: 'Programming Languages',
     icon: CodeIcon,
     skills: [
-      { name: 'Python',  percent: 80,  showBar: true  },
-      { name: 'PHP',     percent: 80,  showBar: true  },
-      { name: 'Java',    percent: 75,  showBar: true  },
-      { name: 'Kotlin',  percent: 60,  showBar: false },
+      { name: 'Python', icon: SiPython,     color: '#3776AB' },
+      { name: 'PHP',    icon: SiPhp,        color: '#777BB4' },
+      { name: 'Java',   icon: FaJava,       color: '#007396' },
+      { name: 'Kotlin', icon: SiKotlin,     color: '#7F52FF' },
+      { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
+      { name: 'TypeScript', icon: SiTypescript, color: '#3178C6' },
     ],
   },
   {
@@ -24,13 +52,15 @@ const categories = [
     label_en: 'Web & Mobile Technologies',
     icon: GlobeIcon,
     skills: [
-      { name: 'TailwindCSS',  percent: 90, showBar: true  },
-      { name: 'React',        percent: 75, showBar: true  },
-      { name: 'Laravel',      percent: 75, showBar: true  },
-      { name: 'Next.js',      percent: 70, showBar: false },
-      { name: 'React Native', percent: 65, showBar: false },
-      { name: 'Bootstrap',    percent: 70, showBar: false },
-      { name: 'Vue.js',       percent: 60, showBar: false },
+      { name: 'TailwindCSS',  icon: SiTailwindcss, color: '#06B6D4' },
+      { name: 'React',        icon: SiReact,       color: '#61DAFB' },
+      { name: 'Laravel',      icon: SiLaravel,     color: '#FF2D20' },
+      { name: 'Next.js',      icon: SiNextdotjs,   color: '#000000' },
+      { name: 'React Native', icon: SiReact,       color: '#61DAFB' },
+      { name: 'Bootstrap',    icon: SiBootstrap,   color: '#7952B3' },
+      { name: 'Vue.js',       icon: SiVuedotjs,    color: '#4FC08D' },
+      { name: 'HTML5',        icon: SiHtml5,       color: '#E34F26' },
+      { name: 'CSS3',         icon: SiCss3,        color: '#1572B6' },
     ],
   },
   {
@@ -39,8 +69,8 @@ const categories = [
     label_en: 'Databases',
     icon: DatabaseIcon,
     skills: [
-      { name: 'MySQL',      percent: 80, showBar: true  },
-      { name: 'PostgreSQL', percent: 75, showBar: true  },
+      { name: 'MySQL',      icon: SiMysql,      color: '#4479A1' },
+      { name: 'PostgreSQL', icon: SiPostgresql, color: '#4169E1' },
     ],
   },
   {
@@ -49,111 +79,99 @@ const categories = [
     label_en: 'Tools & Environment',
     icon: WrenchIcon,
     skills: [
-      { name: 'Microsoft Office',        percent: 85, showBar: true  },
-      { name: 'Git & GitHub',            percent: 80, showBar: true  },
-      { name: 'Linux (Terminal)',         percent: 70, showBar: false },
-      { name: 'Adobe Photoshop / Canva', percent: 65, showBar: false },
+      { name: 'Microsoft Office', icon: FaMicrosoft,     color: '#D83B01' },
+      { name: 'Git',              icon: SiGit,           color: '#F05032' },
+      { name: 'GitHub',           icon: SiGithub,        color: '#181717' },
+      { name: 'Linux',            icon: SiLinux,         color: '#FCC624' },
+      { name: 'Photoshop',        icon: SiAdobephotoshop,color: '#31A8FF' },
+      { name: 'Canva',            icon: SiCanva,         color: '#00C4CC' },
     ],
   },
 ]
 
-// ─── Barre de progression ─────────────────────────────────────────────────────
-function SkillBar({
-  name, percent, inView, delay,
+// ─── Skill Item (icône + nom) ─────────────────────────────────────────────────
+function SkillItem({
+  skill, inView, delay,
 }: {
-  name: string; percent: number; inView: boolean; delay: number
+  skill: Skill; inView: boolean; delay: number
 }) {
+  const Icon = skill.icon
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.5, delay }}
-      className="group"
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.4, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+      whileHover={{ y: -3, scale: 1.03 }}
+      className="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl cursor-default transition-colors"
+      style={{
+        background: 'rgba(0,0,0,0.02)',
+        border: '0.5px solid rgba(0,0,0,0.06)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = `${skill.color}10`
+        e.currentTarget.style.borderColor = `${skill.color}30`
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'rgba(0,0,0,0.02)'
+        e.currentTarget.style.borderColor = 'rgba(0,0,0,0.06)'
+      }}
     >
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-sm font-medium text-muted-foreground group-hover:text-accent transition-colors">
-          {name}
-        </span>
-        <span className="text-xs text-muted-foreground">{percent}%</span>
-      </div>
-      <div className="relative h-1.5 rounded-full bg-accent/10 overflow-hidden">
-        <motion.div
-          className="absolute inset-y-0 left-0 rounded-full bg-accent"
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${percent}%` } : { width: 0 }}
-          transition={{ duration: 1.1, delay: delay + 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-        />
-      </div>
+      <Icon
+        size={28}
+        style={{ color: skill.color }}
+        className="transition-transform duration-300 group-hover:scale-110"
+      />
+      <span
+        className="text-[11px] font-medium text-center leading-tight text-gray-600 dark:text-gray-400"
+        style={{ letterSpacing: '0.01em' }}
+      >
+        {skill.name}
+      </span>
     </motion.div>
   )
 }
 
-// ─── Card catégorie ───────────────────────────────────────────────────────────
+// ─── Category Card ────────────────────────────────────────────────────────────
 function CategoryCard({
   category, inView, baseDelay, lang,
 }: {
-  category: typeof categories[0]; inView: boolean; baseDelay: number; lang: string
+  category: Category; inView: boolean; baseDelay: number; lang: string
 }) {
   const Icon = category.icon
   const label = lang === 'fr' ? category.label_fr : category.label_en
-
-  const barSkills = category.skills.filter((s) => s.showBar)
-  const tagSkills = category.skills.filter((s) => !s.showBar)
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.5, delay: baseDelay }}
-      className="p-8 bg-card rounded-lg border border-border hover:border-accent/50 transition-colors"
+      className="p-6 bg-card rounded-lg border border-border hover:border-accent/50 transition-colors"
       whileHover={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
     >
       {/* En-tête catégorie */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-5">
         <div className="w-8 h-8 rounded-md bg-accent/10 flex items-center justify-center shrink-0">
           <Icon size={16} className="text-accent" />
         </div>
         <h3 className="text-base font-bold text-foreground text-gray-600 dark:text-white">
           {label}
         </h3>
+        <span className="ml-auto text-xs text-gray-400 font-medium">
+          {category.skills.length}
+        </span>
       </div>
 
-      {/* Barres — skills principaux */}
-      {barSkills.length > 0 && (
-        <div className="flex flex-col gap-4 mb-5">
-          {barSkills.map((skill, i) => (
-            <SkillBar
-              key={skill.name}
-              name={skill.name}
-              percent={skill.percent}
-              inView={inView}
-              delay={baseDelay + i * 0.08}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Séparateur si les deux sections coexistent */}
-      {barSkills.length > 0 && tagSkills.length > 0 && (
-        <div className="h-px bg-border mb-5" />
-      )}
-
-      {/* Tags — autres skills */}
-      {tagSkills.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {tagSkills.map((skill, i) => (
-            <motion.span
-              key={`${category.key}-tag-${skill.name}-${i}`}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.3, delay: baseDelay + i * 0.06 }}
-              className="px-3 py-1 bg-accent/10 text-accent text-sm rounded-full"
-            >
-              {skill.name}
-            </motion.span>
-          ))}
-        </div>
-      )}
+      {/* Grille d'icônes */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
+        {category.skills.map((skill, i) => (
+          <SkillItem
+            key={`${category.key}-${skill.name}-${i}`}
+            skill={skill}
+            inView={inView}
+            delay={baseDelay + i * 0.05}
+          />
+        ))}
+      </div>
     </motion.div>
   )
 }
