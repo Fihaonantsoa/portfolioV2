@@ -1,7 +1,10 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Download, Github, Code2, Monitor, Terminal, Globe } from 'lucide-react'
+import {
+  ChevronDown, Download, Github, Code2, Monitor,
+  Terminal, Globe, Sparkles, ArrowRight,
+} from 'lucide-react'
 import { useLanguage } from '@/utils/language-context'
 import { useEffect, useState, useRef } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -19,7 +22,6 @@ function SkillTooltip({
   const ref = useRef<HTMLDivElement>(null)
   const details = language === 'fr' ? skill.details.fr : skill.details.en
 
-  // Fermer au clic extérieur (mobile)
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
@@ -40,16 +42,25 @@ function SkillTooltip({
       {/* Skill card */}
       <motion.div
         onClick={() => setOpen((v) => !v)}
-        className="flex flex-col items-center p-3 bg-card/50 rounded-xl border border-border/50 hover:border-accent/30 transition-all cursor-pointer group"
-        whileHover={{ y: -2 }}
+        className="relative flex flex-col items-center p-3 rounded-2xl cursor-pointer group overflow-hidden"
+        style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '0.5px solid rgba(255,255,255,0.08)',
+        }}
+        whileHover={{ y: -4, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         tabIndex={0}
         role="button"
         aria-expanded={open}
         aria-label={skill.label}
       >
-        <skill.icon className="w-6 h-6 mb-1 text-accent/80 group-hover:text-accent transition-colors duration-300" />
-        <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground transition-colors duration-300 text-center">
+        {/* Glow au survol */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{ background: 'radial-gradient(circle at center, rgba(139,92,246,0.08) 0%, transparent 70%)' }}
+        />
+
+        <skill.icon className="w-6 h-6 mb-1.5 text-accent/70 group-hover:text-accent transition-colors duration-300" />
+        <span className="text-[11px] font-medium text-foreground/70 group-hover:text-foreground transition-colors duration-300 text-center leading-tight">
           {skill.label}
         </span>
       </motion.div>
@@ -62,40 +73,43 @@ function SkillTooltip({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.95 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="
-              absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50
-              w-44 rounded-xl p-3
-              bg-background/90 backdrop-blur-md
-              border border-accent/20 shadow-lg shadow-black/10
-              pointer-events-none
-            "
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 w-44 rounded-2xl p-3.5 pointer-events-none"
+            style={{
+              background: 'rgba(15,15,25,0.92)',
+              backdropFilter: 'blur(16px)',
+              border: '0.5px solid rgba(139,92,246,0.25)',
+              boxShadow: '0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(139,92,246,0.06)',
+            }}
           >
             {/* Flèche */}
-            <div className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 rotate-45 bg-background/90 border-r border-b border-accent/20" />
+            <div className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 rotate-45"
+              style={{
+                background: 'rgba(15,15,25,0.92)',
+                borderRight: '0.5px solid rgba(139,92,246,0.25)',
+                borderBottom: '0.5px solid rgba(139,92,246,0.25)',
+              }}
+            />
 
-            {/* Titre */}
-            <p className="text-[10px] uppercase tracking-widest text-accent/60 font-medium mb-2 text-center">
-              {language === 'fr' ? 'expertise' : 'expertise'}
+            <p className="text-[9px] uppercase tracking-[0.15em] text-accent/60 font-semibold mb-2 text-center">
+              {language === 'fr' ? 'Expertise' : 'Expertise'}
             </p>
 
-            {/* Liste */}
-            <ul className="space-y-1">
+            <ul className="space-y-1.5">
               {details.map((tech) => (
-                <li key={tech} className="flex items-center gap-2 text-xs text-foreground/80">
-                  <span className="text-accent/50 text-[8px]">◆</span>
+                <li key={tech} className="flex items-center gap-2 text-[11px] text-foreground/80">
+                  <span className="text-accent/50 text-[7px]">◆</span>
                   {tech}
                 </li>
               ))}
             </ul>
 
-            {/* Indicateur en ligne */}
-            <div className="mt-2.5 flex items-center justify-center gap-1.5">
+            <div className="mt-3 flex items-center justify-center gap-1.5 pt-2 border-t border-white/5">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
               </span>
               <span className="text-[9px] uppercase tracking-wider text-accent/70">
-                {language === 'fr' ? 'en ligne' : 'online'}
+                {language === 'fr' ? 'En ligne' : 'Online'}
               </span>
             </div>
           </motion.div>
@@ -163,12 +177,18 @@ export default function Hero() {
     {
       icon: Code2,
       label: language === 'fr' ? 'Développement Web' : 'Web Development',
-      details: { fr: ['React/Next.js', 'TypeScript', 'Node.js', 'TailwindCSS'], en: ['React/Next.js', 'TypeScript', 'Node.js', 'TailwindCSS'] },
+      details: {
+        fr: ['React/Next.js', 'TypeScript', 'TailwindCSS', 'Node.js'],
+        en: ['React/Next.js', 'TypeScript', 'TailwindCSS', 'Node.js'],
+      },
     },
     {
       icon: Monitor,
       label: language === 'fr' ? 'Applications Desktop' : 'Desktop Apps',
-      details: { fr: ['C++', 'C#', 'Python', 'Java'], en: ['C++', 'C#', 'Python', 'Java'] },
+      details: {
+        fr: ['Python', 'Java', 'C#', 'C++'],
+        en: ['Python', 'Java', 'C#', 'C++'],
+      },
     },
     {
       icon: Terminal,
@@ -181,7 +201,10 @@ export default function Hero() {
     {
       icon: Globe,
       label: language === 'fr' ? 'Systèmes Unix' : 'Unix Systems',
-      details: { fr: ['Linux/Unix', 'Bash'], en: ['Linux/Unix', 'Bash'] },
+      details: {
+        fr: ['Linux/Unix', 'Bash', 'Docker', 'Git'],
+        en: ['Linux/Unix', 'Bash', 'Docker', 'Git'],
+      },
     },
   ]
 
@@ -247,10 +270,26 @@ export default function Hero() {
       id="hero"
       className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 lg:pt-4 overflow-hidden relative bg-background dark:bg-transparent"
     >
-      {/* Éléments décoratifs */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-accent/3 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '10s' }} />
+      {/* Éléments décoratifs d'arrière-plan */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        {/* Orbe 1 */}
+        <div
+          className="absolute top-[15%] left-[5%] w-80 h-80 rounded-full blur-[100px] opacity-30 animate-pulse"
+          style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)', animationDuration: '8s' }}
+        />
+        {/* Orbe 2 */}
+        <div
+          className="absolute bottom-[15%] right-[5%] w-96 h-96 rounded-full blur-[120px] opacity-25 animate-pulse"
+          style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)', animationDuration: '10s' }}
+        />
+        {/* Grille subtile */}
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
       </div>
 
       <motion.div
@@ -263,9 +302,25 @@ export default function Hero() {
         {/* ── Gauche ── */}
         <div className="lg:text-left order-2 lg:order-1 text-center">
 
+          {/* Badge de disponibilité */}
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6"
+            style={{
+              background: 'rgba(139,92,246,0.08)',
+              border: '0.5px solid rgba(139,92,246,0.2)',
+            }}
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+            </span>
+            <span className="text-xs font-medium text-foreground/70">
+              {language === 'fr' ? 'Disponible pour missions' : 'Available for work'}
+            </span>
+          </motion.div>
+
           {/* Titre lettre par lettre */}
           <motion.h1 variants={itemVariants} className="font-bold text-balance mb-4 text-foreground">
-            <div className="text-2xl sm:text-4xl lg:text-5xl flex flex-wrap gap-1 justify-center lg:justify-start mb-5 lg:mb-0">
+            <div className="text-2xl sm:text-4xl lg:text-5xl flex flex-wrap gap-1 justify-center lg:justify-start mb-3 lg:mb-2">
               {titleLetters.map((char, i) => (
                 <motion.span
                   key={i}
@@ -277,31 +332,38 @@ export default function Hero() {
                 </motion.span>
               ))}
             </div>
-            <div className="flex flex-wrap gap-0.5 justify-center lg:justify-start mb-5 lg:mb-0 text-md sm:text-2xl lg:text-3xl">
+            <div className="flex flex-wrap gap-0.5 justify-center lg:justify-start mb-3">
               {firstNameLetters.map((char, i) => (
                 <motion.span
                   key={i}
                   custom={i}
                   variants={letterVariants}
-                  className="inline-block hover:text-accent transition-colors duration-300 text-gray-600 cursor-pointer dark:text-white"
+                  className="inline-block text-2xl sm:text-3xl lg:text-4xl bg-gradient-to-r from-accent via-purple-400 to-accent bg-clip-text text-transparent cursor-pointer"
                 >
                   {char === ' ' ? '\u00A0' : char}
                 </motion.span>
               ))}
             </div>
+
             {/* Typewriter */}
-            <span className="block mt-2 h-[1.2em] text-lg sm:text-xl text-accent">
-              {displayText}
-              <motion.span
-                animate={{ opacity: [1, 0.3] }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-                className="inline-block w-0.5 h-[0.8em] bg-accent/70 ml-1 align-middle"
-              />
-            </span>
+            <div className="flex items-center justify-center lg:justify-start gap-2 mt-4 h-[1.5em]">
+              <Sparkles size={18} className="text-accent/60 flex-shrink-0" />
+              <span className="text-lg sm:text-xl text-accent font-medium">
+                {displayText}
+                <motion.span
+                  animate={{ opacity: [1, 0.3] }}
+                  transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+                  className="inline-block w-0.5 h-[0.9em] bg-accent/70 ml-1 align-middle"
+                />
+              </span>
+            </div>
           </motion.h1>
 
           {/* Description */}
-          <motion.p variants={itemVariants} className="text-base text-muted-foreground mb-6 lg:max-w-xl">
+          <motion.p
+            variants={itemVariants}
+            className="text-base text-muted-foreground mb-7 lg:max-w-xl leading-relaxed"
+          >
             {t('hero.description')}
           </motion.p>
 
@@ -310,32 +372,43 @@ export default function Hero() {
             <motion.a
               href="#projects"
               onClick={(e) => { e.preventDefault(); scrollToSection('#projects') }}
-              className="px-5 py-2.5 bg-accent text-accent-foreground rounded-full font-semibold hover:shadow-lg transition-all flex items-center gap-2 text-sm"
+              className="group px-5 py-2.5 bg-accent text-accent-foreground rounded-full font-semibold transition-all flex items-center gap-2 text-sm relative overflow-hidden"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              style={{ boxShadow: '0 4px 20px rgba(139,92,246,0.25)' }}
             >
               <Code2 size={16} />
               {t('hero.cta_projects')}
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
             </motion.a>
 
             <motion.a
               href="https://github.com/FIhaonantsoa"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 bg-muted text-foreground rounded-full font-semibold hover:bg-muted/80 transition-all flex items-center gap-2 text-sm"
-              whileHover={{ scale: 1.02 }}
+              className="px-5 py-2.5 rounded-full font-semibold transition-all flex items-center gap-2 text-sm"
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '0.5px solid rgba(255,255,255,0.1)',
+                color: 'var(--foreground)',
+              }}
+              whileHover={{ scale: 1.02, background: 'rgba(255,255,255,0.06)' }}
               whileTap={{ scale: 0.98 }}
             >
               <Github size={16} />
               GitHub
             </motion.a>
 
-            {/* Nouveau bouton CV */}
             <motion.a
               href="/CV_Fihaonantsoa_Ainamirindra_RAFANOMANANA.pdf"
               download
-              className="px-5 py-2.5 bg-muted text-foreground rounded-full font-semibold hover:bg-muted/80 transition-all flex items-center gap-2 text-sm"
-              whileHover={{ scale: 1.02 }}
+              className="px-5 py-2.5 rounded-full font-semibold transition-all flex items-center gap-2 text-sm"
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '0.5px solid rgba(255,255,255,0.1)',
+                color: 'var(--foreground)',
+              }}
+              whileHover={{ scale: 1.02, background: 'rgba(255,255,255,0.06)' }}
               whileTap={{ scale: 0.98 }}
             >
               <Download size={16} />
@@ -344,7 +417,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Skills avec tooltips */}
-          <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-8">
             {skills.map((skill, i) => (
               <SkillTooltip key={i} skill={skill} language={language} />
             ))}
@@ -357,20 +430,75 @@ export default function Hero() {
           className="relative order-1 lg:order-2 flex justify-center lg:justify-end"
         >
           <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80">
-            <div className="absolute inset-0 rounded-full bg-accent/10 animate-pulse" style={{ animationDuration: '4s' }} />
-            <div className="absolute inset-2 rounded-full border-2 border-accent/30" />
-            <div className="absolute inset-4 rounded-full overflow-hidden border-4 border-background shadow-xl">
+            {/* Halo animé */}
+            <div
+              className="absolute inset-0 rounded-full blur-2xl opacity-40 animate-pulse"
+              style={{
+                background: 'radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)',
+                animationDuration: '4s',
+              }}
+            />
+
+            {/* Anneaux décoratifs */}
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{ border: '1px dashed rgba(139,92,246,0.25)' }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+            />
+            <div
+              className="absolute inset-3 rounded-full"
+              style={{ border: '0.5px solid rgba(139,92,246,0.15)' }}
+            />
+
+            {/* Photo */}
+            <div className="absolute inset-5 rounded-full overflow-hidden"
+              style={{
+                border: '3px solid var(--background)',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(139,92,246,0.15)',
+              }}
+            >
               <Image src="me.png" alt="Profile" fill className="object-cover" priority />
             </div>
+
+            {/* Badge disponible */}
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 1, type: 'spring' }}
-              className="absolute -bottom-2 -right-2 bg-accent text-accent-foreground px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg"
+              initial={{ scale: 0, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 1, type: 'spring', stiffness: 200 }}
+              className="absolute -bottom-2 right-0 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1.5"
+              style={{
+                background: 'linear-gradient(135deg, #10b981, #059669)',
+                color: 'white',
+                boxShadow: '0 8px 24px rgba(16,185,129,0.4)',
+              }}
             >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
+              </span>
               {language === 'fr' ? 'Disponible' : 'Available'}
             </motion.div>
           </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Indicateur de scroll */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.6 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 cursor-pointer"
+        onClick={() => scrollToSection('#skills')}
+      >
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-medium">
+          {t('hero.scroll')}
+        </span>
+        <motion.div
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <ChevronDown size={16} className="text-accent/60" />
         </motion.div>
       </motion.div>
     </section>
